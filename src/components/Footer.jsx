@@ -4,6 +4,8 @@ const FOOTER_LINKS = [
   { href: "#services", label: "Services" },
   { href: "#why", label: "Why Us" },
   { href: "#stats", label: "Results" },
+  { href: "#support", label: "Support" },
+  { href: "#team", label: "Our Team" },
   { href: "#contact", label: "Contact" },
 ];
 

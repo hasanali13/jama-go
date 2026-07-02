@@ -64,6 +64,7 @@ const NAV_ITEMS = [
   },
   { href: "#blog", label: "Blog" },
   { href: "#support", label: "Support" },
+  { href: "#team", label: "Our Team" },
   { href: "#contact", label: "Contact" },
 ];
 
