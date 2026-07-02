@@ -41,12 +41,12 @@ const NAV_ITEMS = [
     label: "Services",
     menu: "grid",
     children: [
-      { href: "#services", label: "All Services" },
-      { href: "#services", label: "Manned Guarding" },
-      { href: "#services", label: "Mobile Patrols" },
-      { href: "#services", label: "Event Security" },
-      { href: "#services", label: "CCTV Monitoring" },
-      { href: "#services", label: "Alarm Response" },
+      { href: "#manned-guarding", label: "Manned Guarding" },
+      { href: "#mobile-patrols", label: "Mobile Patrols" },
+      { href: "#event-security", label: "Event Security" },
+      { href: "#cctv-monitoring", label: "CCTV Monitoring" },
+      { href: "#residential-security", label: "Residential Security" },
+      { href: "#alarm-response", label: "Alarm Response" },
     ],
   },
   {
@@ -64,7 +64,6 @@ const NAV_ITEMS = [
   },
   { href: "#blog", label: "Blog" },
   { href: "#support", label: "Support" },
-  { href: "#team", label: "Our Team" },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -81,7 +80,15 @@ function isActive(href, activeHash) {
 }
 
 function childIsActive(item, activeHash) {
-  return flattenChildren(item.children).some((c) => isActive(c.href, activeHash));
+  return flattenChildren(item.children).some((c) =>
+    isMegaLinkActive(c, flattenChildren(item.children), activeHash)
+  );
+}
+
+function isMegaLinkActive(child, siblings, activeHash) {
+  if (!isActive(child.href, activeHash)) return false;
+  const duplicates = siblings.filter((item) => item.href === child.href);
+  return duplicates.length === 1;
 }
 
 function DropdownLinks({ items, activeHash, onNavigate }) {
@@ -89,7 +96,7 @@ function DropdownLinks({ items, activeHash, onNavigate }) {
     <a
       key={child.label}
       href={child.href}
-      className={`nav-mega-link${isActive(child.href, activeHash) ? " active" : ""}`}
+      className={`nav-mega-link${isMegaLinkActive(child, items, activeHash) ? " active" : ""}`}
       onClick={onNavigate}
     >
       {child.label}
@@ -127,7 +134,7 @@ export default function Header() {
 
   return (
     <header className={`site-header${open ? " open" : ""}`} id="top">
-      <div className="header-inner">
+      <div className="container header-inner">
         <a href="#top" className="brand" aria-label="Jama Go Security home">
           <Logo variant="header" />
         </a>
