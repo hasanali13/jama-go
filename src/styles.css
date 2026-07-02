@@ -15,6 +15,7 @@
   --warn: #d98a1a;
   --radius: 16px;
   --container: 1180px;
+  --header-pad: clamp(20px, 3.5vw, 64px);
   --shadow: 0 18px 45px -22px rgba(15, 23, 42, 0.28);
 }
 
@@ -82,28 +83,41 @@ a { color: inherit; text-decoration: none; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
   overflow: visible;
 }
 .header-inner {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  height: 80px;
-  gap: 24px;
+  width: 100%;
+  max-width: none;
+  min-height: 96px;
+  padding: 12px var(--header-pad);
+  gap: clamp(20px, 3vw, 48px);
   overflow: visible;
 }
-.brand { display: inline-flex; align-items: center; flex-shrink: 0; }
-.brand-logo { display: block; width: auto; }
-.brand-logo--header { height: 48px; }
+.brand {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-right: 8px;
+}
+.brand-logo { display: block; width: auto; object-fit: contain; }
+.brand-logo--header { height: clamp(58px, 5.5vw, 76px); }
 .brand-logo--footer { height: 50px; margin-bottom: 6px; }
 
 .main-nav {
   display: flex;
   align-items: center;
-  gap: 22px;
-  margin-left: auto;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: clamp(10px, 1.25vw, 26px);
+  min-width: 0;
   overflow: visible;
 }
 
@@ -112,12 +126,12 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 0;
+  padding: 10px 2px;
   color: var(--brand-2);
   font-family: "Sora", "Inter", sans-serif;
   font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.06em;
+  font-size: clamp(11px, 0.85vw, 13px);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   background: none;
   border: 0;
@@ -251,7 +265,13 @@ a { color: inherit; text-decoration: none; }
   color: #ffffff;
 }
 
-.nav-cta { margin-left: 8px; flex-shrink: 0; }
+.nav-cta {
+  margin-left: 0;
+  flex-shrink: 0;
+  padding: 12px 24px;
+  font-size: clamp(13px, 0.9vw, 14px);
+  white-space: nowrap;
+}
 
 .nav-toggle {
   display: none;
@@ -503,17 +523,46 @@ a { color: inherit; text-decoration: none; }
 .reveal.in { opacity: 1; transform: none; }
 
 /* ===== Responsive ===== */
+@media (min-width: 901px) and (max-width: 1280px) {
+  .header-inner {
+    gap: 16px;
+    min-height: 88px;
+  }
+  .main-nav { gap: 10px; }
+  .nav-link { font-size: 11px; letter-spacing: 0.04em; }
+  .brand-logo--header { height: 56px; }
+  .nav-cta { padding: 10px 18px; }
+}
+
+@media (min-width: 1600px) {
+  .header-inner {
+    min-height: 104px;
+    gap: 56px;
+  }
+  .brand-logo--header { height: 80px; }
+  .main-nav { gap: 32px; }
+  .nav-link { font-size: 14px; }
+}
+
 @media (max-width: 900px) {
   .hero-inner, .why-inner, .cta-inner { grid-template-columns: 1fr; }
   .hero-card { order: -1; }
   .cards { grid-template-columns: repeat(2, 1fr); }
   .stats { grid-template-columns: repeat(2, 1fr); }
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    min-height: 88px;
+    padding: 12px 24px;
+    gap: 16px;
+  }
+  .brand-logo--header { height: 52px; }
   .main-nav, .nav-cta { display: none; }
   .nav-toggle { display: flex; }
   .site-header.open .main-nav {
     display: flex;
     position: absolute;
-    top: 80px;
+    top: 88px;
     left: 0;
     right: 0;
     flex-direction: column;
@@ -570,11 +619,17 @@ a { color: inherit; text-decoration: none; }
   }
 }
 @media (max-width: 560px) {
+  .header-inner {
+    min-height: 80px;
+    padding: 10px 20px;
+    gap: 12px;
+  }
+  .brand-logo--header { height: 44px; }
+  .site-header.open .main-nav { top: 80px; }
   .cards, .stats { grid-template-columns: 1fr; }
   .hero { padding: 60px 0; }
   .section { padding: 64px 0; }
   .hero-badges { gap: 20px; }
-  .brand-logo--header { height: 34px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

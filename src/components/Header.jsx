@@ -127,7 +127,7 @@ export default function Header() {
 
   return (
     <header className={`site-header${open ? " open" : ""}`} id="top">
-      <div className="container header-inner">
+      <div className="header-inner">
         <a href="#top" className="brand" aria-label="Jama Go Security home">
           <Logo variant="header" />
         </a>

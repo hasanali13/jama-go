@@ -5,8 +5,8 @@ export default function Logo({ variant = "header" }) {
       src="/JamaGoLogo.png"
       alt="Jama Go Security Equipment"
       className={`brand-logo brand-logo--${variant}`}
-      width="180"
-      height="60"
+      width="240"
+      height="80"
       decoding="async"
     />
   );
