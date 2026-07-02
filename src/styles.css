@@ -148,7 +148,6 @@ a { color: inherit; text-decoration: none; }
   border-top: 5px solid var(--brand-2);
   transition: transform .2s;
 }
-.nav-dropdown:hover .nav-caret,
 .nav-dropdown.open .nav-caret {
   transform: rotate(180deg);
 }
@@ -157,8 +156,22 @@ a { color: inherit; text-decoration: none; }
   position: relative;
 }
 
+/* Invisible bridge — covers the gap between trigger and panel (desktop only) */
+@media (min-width: 901px) {
+  .nav-dropdown::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    left: -32px;
+    right: -32px;
+    top: 100%;
+    height: 24px;
+  }
+}
+
 .nav-mega {
   position: absolute;
+  z-index: 2;
   top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%) translateY(8px);
@@ -171,9 +184,11 @@ a { color: inherit; text-decoration: none; }
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity .22s ease, transform .22s ease, visibility .22s;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    visibility 0.25s ease;
 }
-.nav-dropdown:hover .nav-mega,
 .nav-dropdown.open .nav-mega {
   opacity: 1;
   visibility: visible;
@@ -196,34 +211,11 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.05em;
   text-transform: uppercase;
   border-radius: 8px;
-  transition: background .18s, color .18s;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 .nav-mega-link:hover {
-  color: var(--brand);
-}
-
-/* Services dropdown — premium hover underline */
-.nav-dropdown--services .nav-mega-link {
-  position: relative;
-  transition: color 0.3s ease;
-}
-.nav-dropdown--services .nav-mega-link::after {
-  content: "";
-  position: absolute;
-  left: 14px;
-  right: 14px;
-  bottom: 6px;
-  height: 2px;
   background: var(--brand-2);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.3s ease;
-}
-.nav-dropdown--services .nav-mega-link:hover {
-  color: var(--brand-2);
-}
-.nav-dropdown--services .nav-mega-link:hover::after {
-  transform: scaleX(1);
+  color: #ffffff;
 }
 
 .nav-cta { margin-left: 8px; flex-shrink: 0; }
