@@ -1,0 +1,21 @@
+<section class="section" id="services">
+  <div class="container">
+    <div appReveal class="section-head">
+      <span class="kicker">What We Do</span>
+      <h2>Complete security solutions, one dependable partner</h2>
+      <p>
+        From a single guard to a fully monitored estate, we scale protection to fit your risk.
+      </p>
+    </div>
+
+    <div class="cards">
+      @for (service of services; track service.title) {
+        <article appReveal class="feature" [id]="service.id">
+          <div class="feature-icon">{{ service.icon }}</div>
+          <h3>{{ service.title }}</h3>
+          <p>{{ service.text }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>

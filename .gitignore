@@ -1,8 +1,8 @@
+.tools
 node_modules
 dist
-dist-ssr
+.angular
 *.local
-.vite
 
 # Logs
 logs

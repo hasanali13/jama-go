@@ -1,0 +1,108 @@
+<header class="site-header" [class.open]="mobileOpen" id="top">
+  <div class="container header-inner">
+    <a href="#top" class="brand" aria-label="Jama Go Security home" (click)="closeMobile()">
+      <app-logo variant="header" />
+    </a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      @for (item of navItems; track item.label) {
+        @if (isDropdown(item)) {
+          <div
+            #dropdownEl
+            [attr.data-label]="item.label"
+            class="nav-dropdown"
+            [class]="'nav-dropdown nav-dropdown--' + item.menu"
+            [class.open]="openDropdown === item.label"
+            [class.active]="childIsActive(item)"
+            (mouseenter)="onDropdownEnter(item.label)"
+            (mouseleave)="onDropdownLeave()"
+            (focusin)="onDropdownEnter(item.label)"
+            (focusout)="onDropdownBlur($event, item.label)"
+          >
+            <button
+              type="button"
+              class="nav-link nav-link--dropdown"
+              [attr.aria-expanded]="openDropdown === item.label"
+              aria-haspopup="true"
+              (click)="!isDesktopNav && toggleMobileDropdown(item.label)"
+            >
+              {{ item.label }}
+              <span class="nav-caret" aria-hidden="true"></span>
+            </button>
+
+            <div class="nav-mega">
+              @if (item.menu === 'columns') {
+                <div class="nav-mega-grid nav-mega-grid--2">
+                  @for (column of asColumns(item.children); track column[0].label) {
+                    <div class="nav-mega-col">
+                      @for (child of column; track child.label) {
+                        <a
+                          [href]="child.href"
+                          class="nav-mega-link"
+                          [class.active]="isMegaLinkActive(child, column)"
+                          (click)="closeMobile()"
+                        >
+                          {{ child.label }}
+                        </a>
+                      }
+                    </div>
+                  }
+                </div>
+              } @else if (item.menu === 'grid') {
+                <div class="nav-mega-grid nav-mega-grid--3">
+                  @for (child of asLinks(item.children); track child.label) {
+                    <a
+                      [href]="child.href"
+                      class="nav-mega-link"
+                      [class.active]="isMegaLinkActive(child, asLinks(item.children))"
+                      (click)="closeMobile()"
+                    >
+                      {{ child.label }}
+                    </a>
+                  }
+                </div>
+              } @else {
+                <div class="nav-mega-stack">
+                  @for (child of asLinks(item.children); track child.label) {
+                    <a
+                      [href]="child.href"
+                      class="nav-mega-link"
+                      [class.active]="isMegaLinkActive(child, asLinks(item.children))"
+                      (click)="closeMobile()"
+                    >
+                      {{ child.label }}
+                    </a>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        } @else {
+          <a
+            [href]="item.href"
+            class="nav-link"
+            [class.active]="isActive(item.href)"
+            (click)="closeMobile()"
+          >
+            {{ item.label }}
+          </a>
+        }
+      }
+    </nav>
+
+    <a href="#contact" class="btn btn-primary btn-sm nav-cta" (click)="closeMobile()">
+      Get a Quote
+    </a>
+
+    <button
+      class="nav-toggle"
+      aria-label="Toggle menu"
+      [attr.aria-expanded]="mobileOpen"
+      (click)="toggleMobileMenu()"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>

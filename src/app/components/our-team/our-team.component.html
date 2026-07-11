@@ -1,0 +1,23 @@
+<section class="section section-alt" id="team">
+  <div class="container">
+    <div appReveal class="section-head">
+      <span class="kicker">Our Team</span>
+      <h2>The people behind your protection</h2>
+      <p>
+        Licensed, trained, and committed professionals working together to keep your people,
+        property, and peace of mind secure.
+      </p>
+    </div>
+
+    <div class="cards">
+      @for (member of team; track member.role) {
+        <article appReveal class="feature team-card">
+          <div class="feature-icon">👤</div>
+          <h3>{{ member.name }}</h3>
+          <p class="team-role">{{ member.role }}</p>
+          <p>{{ member.bio }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>

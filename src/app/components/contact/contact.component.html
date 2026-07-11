@@ -1,0 +1,47 @@
+<section class="section cta-section" id="contact">
+  <div class="container cta-inner">
+    <div appReveal class="cta-copy">
+      <span class="kicker">Get Protected</span>
+      <h2>Ready for security that never sleeps?</h2>
+      <p>
+        Tell us about your site and we'll build a tailored security plan — free of charge.
+      </p>
+      <ul class="contact-list">
+        <li>📞 <a href="tel:+10000000000">+1 (000) 000-0000</a></li>
+        <li>✉️ <a href="mailto:hello&#64;jamago.security">hello&#64;jamago.security</a></li>
+        <li>📍 Available nationwide, 24 hours a day</li>
+      </ul>
+    </div>
+
+    <form appReveal class="quote-form" (submit)="handleSubmit($event)">
+      <div class="field">
+        <label for="name">Full name</label>
+        <input id="name" name="name" type="text" placeholder="Jane Doe" required />
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="jane@company.com" required />
+      </div>
+      <div class="field">
+        <label for="service">Service needed</label>
+        <select id="service" name="service">
+          @for (option of serviceOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label for="msg">Message</label>
+        <textarea id="msg" name="msg" rows="3" placeholder="Tell us about your site…"></textarea>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" [disabled]="sent">
+        @if (sent) {
+          ✓ Request Sent — We'll be in touch
+        } @else {
+          Request Free Assessment
+        }
+      </button>
+      <p class="form-note">We'll respond within one business hour.</p>
+    </form>
+  </div>
+</section>

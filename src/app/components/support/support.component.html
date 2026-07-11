@@ -1,0 +1,26 @@
+<section class="section" id="support">
+  <div class="container">
+    <div appReveal class="section-head">
+      <span class="kicker">Support</span>
+      <h2>Help when you need it, day or night</h2>
+      <p>
+        From emergency response to routine account questions, our support team keeps your security
+        running without interruption.
+      </p>
+    </div>
+
+    <div class="cards">
+      @for (item of supportItems; track item.title) {
+        <article appReveal class="feature">
+          <div class="feature-icon">🎧</div>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.text }}</p>
+        </article>
+      }
+    </div>
+
+    <div appReveal class="support-cta">
+      <a href="#contact" class="btn btn-primary">Contact Support</a>
+    </div>
+  </div>
+</section>
