@@ -13,6 +13,12 @@ interface HeroStat {
   suffix?: string;
   decimals?: number;
 }
+interface TrustBadge {
+  id: string;
+  label: string;
+  tone: 'blue' | 'green' | 'gold' | 'violet';
+}
+
 interface ContactChannel {
   id: string;
   badge: string;
@@ -23,10 +29,11 @@ interface ContactChannel {
   tone: 'blue' | 'green' | 'gold' | 'violet';
 }
 
-interface OfficeHour {
-  day: string;
+interface OfficeDay {
+  short: string;
+  label: string;
   hours: string;
-  tone: 'open' | 'half' | 'closed';
+  tone: 'open' | 'closed';
 }
 
 interface FaqItem {
@@ -77,11 +84,11 @@ export class ContactComponent {
     { icon: '⭐', count: 4.9, suffix: '★', decimals: 1, label: 'Client Rating', tone: 'coral' },
   ];
 
-  readonly trustBadges = [
-    '✓ Certified Engineers',
-    '✓ Qatar Based Support',
-    '✓ Free Site Survey',
-    '✓ AMC Available',
+  readonly trustBadges: TrustBadge[] = [
+    { id: 'certified', label: 'Certified Engineers', tone: 'blue' },
+    { id: 'qatar', label: 'Qatar Based Support', tone: 'green' },
+    { id: 'survey', label: 'Free Site Survey', tone: 'gold' },
+    { id: 'amc', label: 'Yearly Maintenance', tone: 'violet' },
   ];
 
   readonly channels: ContactChannel[] = [
@@ -130,11 +137,41 @@ export class ContactComponent {
     '24/7 AMC & support',
   ];
 
-  readonly officeHours: OfficeHour[] = [
-    { day: 'Sunday – Thursday', hours: '8:00 AM – 6:00 PM', tone: 'open' },
-    { day: 'Saturday', hours: '9:00 AM – 2:00 PM', tone: 'half' },
-    { day: 'Friday', hours: 'Closed', tone: 'closed' },
+  readonly officeHoursLabel = '8:00 AM – 9:00 PM';
+
+  readonly weekSchedule: OfficeDay[] = [
+    { short: 'Sat', label: 'Saturday', hours: '8:00 AM – 9:00 PM', tone: 'open' },
+    { short: 'Sun', label: 'Sunday', hours: '8:00 AM – 9:00 PM', tone: 'open' },
+    { short: 'Mon', label: 'Monday', hours: '8:00 AM – 9:00 PM', tone: 'open' },
+    { short: 'Tue', label: 'Tuesday', hours: '8:00 AM – 9:00 PM', tone: 'open' },
+    { short: 'Wed', label: 'Wednesday', hours: '8:00 AM – 9:00 PM', tone: 'open' },
+    { short: 'Thu', label: 'Thursday', hours: '8:00 AM – 9:00 PM', tone: 'open' },
+    { short: 'Fri', label: 'Friday', hours: 'Holiday', tone: 'closed' },
   ];
+
+  get openStatus(): { open: boolean; label: string } {
+    const now = new Date();
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Qatar',
+      weekday: 'long',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false,
+    }).formatToParts(now);
+
+    const weekday = parts.find((p) => p.type === 'weekday')?.value ?? '';
+    const hour = Number(parts.find((p) => p.type === 'hour')?.value ?? 0);
+    const minute = Number(parts.find((p) => p.type === 'minute')?.value ?? 0);
+    const totalMinutes = hour * 60 + minute;
+
+    if (weekday === 'Friday') {
+      return { open: false, label: 'Closed — Friday Holiday' };
+    }
+    if (totalMinutes >= 8 * 60 && totalMinutes < 21 * 60) {
+      return { open: true, label: 'Open Now' };
+    }
+    return { open: false, label: 'Opens 8:00 AM' };
+  }
 
   readonly serviceOptions = [
     'CCTV Surveillance',
