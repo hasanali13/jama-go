@@ -1497,42 +1497,6 @@
   line-height: 1.7;
 }
 
-/* ── WhatsApp FAB ── */
-.contact-whatsapp-fab {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 60;
-  width: 58px;
-  height: 58px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #25d366;
-  color: #fff;
-  box-shadow: 0 12px 32px -8px rgba(37, 211, 102, 0.65);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.contact-whatsapp-pulse {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #25d366;
-  animation: contactWaPulse 2s ease infinite;
-  z-index: -1;
-}
-
-@keyframes contactWaPulse {
-  0% { transform: scale(1); opacity: 0.6; }
-  100% { transform: scale(1.5); opacity: 0; }
-}
-
-.contact-whatsapp-fab:hover {
-  transform: scale(1.06);
-  box-shadow: 0 16px 40px -8px rgba(37, 211, 102, 0.8);
-}
-
 /* ── Responsive ── */
 @media (max-width: 1024px) {
   .contact-channels {
@@ -1633,12 +1597,5 @@
 
   .contact-stat {
     padding: 20px 14px;
-  }
-
-  .contact-whatsapp-fab {
-    right: 16px;
-    bottom: 16px;
-    width: 52px;
-    height: 52px;
   }
 }
