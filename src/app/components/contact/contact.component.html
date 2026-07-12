@@ -41,33 +41,45 @@
     </div>
   </header>
 
-  <!-- Floating stats -->
-  <div class="container contact-stats-wrap">
-    <div class="contact-stats" appReveal>
-      @for (stat of heroStats; track stat.label) {
-        <article class="contact-stat" [class]="'contact-stat--' + stat.tone">
-          <span class="contact-stat-icon">{{ stat.icon }}</span>
-          <strong
-            class="contact-stat-value"
-            [appCountUp]="stat.count"
-            [countPrefix]="stat.prefix ?? ''"
-            [countSuffix]="stat.suffix ?? ''"
-            [countDecimals]="stat.decimals ?? 0"
-          ></strong>
-          <span>{{ stat.label }}</span>
-        </article>
-      }
+  <!-- Stats + Trust showcase -->
+  <section class="contact-showcase">
+    <div class="contact-showcase-bg" aria-hidden="true">
+      <div class="contact-showcase-mesh"></div>
+      <div class="contact-showcase-grid"></div>
+      <div class="contact-showcase-ring"></div>
+      <div class="contact-showcase-orb contact-showcase-orb--1"></div>
+      <div class="contact-showcase-orb contact-showcase-orb--2"></div>
+      <div class="contact-showcase-orb contact-showcase-orb--3"></div>
     </div>
-  </div>
 
-  <!-- Trust strip -->
-  <div class="container" appReveal>
-    <div class="contact-trust">
-      @for (badge of trustBadges; track badge) {
-        <span>{{ badge }}</span>
-      }
+    <div class="container contact-showcase-inner">
+      <div class="contact-stats-wrap">
+        <div class="contact-stats" appReveal>
+          @for (stat of heroStats; track stat.label) {
+            <article class="contact-stat" [class]="'contact-stat--' + stat.tone">
+              <span class="contact-stat-icon">{{ stat.icon }}</span>
+              <strong
+                class="contact-stat-value"
+                [appCountUp]="stat.count"
+                [countPrefix]="stat.prefix ?? ''"
+                [countSuffix]="stat.suffix ?? ''"
+                [countDecimals]="stat.decimals ?? 0"
+              ></strong>
+              <span>{{ stat.label }}</span>
+            </article>
+          }
+        </div>
+      </div>
+
+      <div class="contact-trust-wrap" appReveal>
+        <div class="contact-trust">
+          @for (badge of trustBadges; track badge) {
+            <span>{{ badge }}</span>
+          }
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
   <!-- Contact channels -->
   <section class="contact-section contact-section--channels">
@@ -127,8 +139,17 @@
   </section>
 
   <!-- Form + map + hours -->
-  <section class="contact-section contact-section--mesh">
-    <div class="container contact-form-grid">
+  <section class="contact-section contact-section--premium contact-section--form">
+    <div class="contact-premium-bg" aria-hidden="true">
+      <div class="contact-premium-mesh"></div>
+      <div class="contact-premium-grid"></div>
+      <div class="contact-premium-ring"></div>
+      <div class="contact-premium-orb contact-premium-orb--1"></div>
+      <div class="contact-premium-orb contact-premium-orb--2"></div>
+      <div class="contact-premium-orb contact-premium-orb--3"></div>
+    </div>
+
+    <div class="container contact-premium-inner contact-form-grid">
       <form appReveal class="contact-form-card" (submit)="handleSubmit($event)">
         <div class="contact-form-glow" aria-hidden="true"></div>
         <div class="contact-form-head">
@@ -194,6 +215,7 @@
               title="Jama Go Security Equipment location"
               [src]="mapEmbedUrl"
               loading="lazy"
+              allowfullscreen
               referrerpolicy="no-referrer-when-downgrade"
             ></iframe>
             <a class="contact-map-pin" [href]="mapLinkUrl" target="_blank" rel="noopener noreferrer">
@@ -228,8 +250,18 @@
   </section>
 
   <!-- Visit office -->
-  <section class="contact-section">
-    <div class="container contact-visit-grid">
+  <section class="contact-section contact-section--premium contact-section--visit">
+    <div class="contact-premium-bg" aria-hidden="true">
+      <div class="contact-premium-mesh"></div>
+      <div class="contact-premium-grid"></div>
+      <div class="contact-premium-ring"></div>
+      <div class="contact-premium-orb contact-premium-orb--1"></div>
+      <div class="contact-premium-orb contact-premium-orb--2"></div>
+      <div class="contact-premium-orb contact-premium-orb--3"></div>
+      <div class="contact-premium-orb contact-premium-orb--4"></div>
+    </div>
+
+    <div class="container contact-premium-inner contact-visit-grid">
       <div class="contact-visit-copy" appReveal>
         <span class="contact-kicker">Our Office</span>
         <h2>Visit Our Showroom</h2>
@@ -296,8 +328,17 @@
   </section>
 
   <!-- FAQ -->
-  <section class="contact-section contact-section--mesh contact-faq-section">
-    <div class="container">
+  <section class="contact-section contact-section--premium contact-section--faq contact-faq-section">
+    <div class="contact-premium-bg" aria-hidden="true">
+      <div class="contact-premium-mesh"></div>
+      <div class="contact-premium-grid"></div>
+      <div class="contact-premium-ring"></div>
+      <div class="contact-premium-orb contact-premium-orb--1"></div>
+      <div class="contact-premium-orb contact-premium-orb--2"></div>
+      <div class="contact-premium-orb contact-premium-orb--3"></div>
+    </div>
+
+    <div class="container contact-premium-inner">
       <div class="contact-section-head" appReveal>
         <span class="contact-kicker">Common Questions</span>
         <h2>Frequently Asked Questions</h2>

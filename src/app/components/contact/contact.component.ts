@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RevealDirective } from '../../directives/reveal.directive';
 import { CountUpDirective } from '../../directives/count-up.directive';
@@ -42,6 +43,8 @@ interface FaqItem {
   styleUrl: './contact.component.css',
 })
 export class ContactComponent {
+  private readonly sanitizer = inject(DomSanitizer);
+
   readonly companyEn = 'Jama Go Security Equipment';
   readonly companySub = 'Jama Q Security Solutions';
   readonly companyAr = 'جاما جو للمعدات الامنية';
@@ -49,9 +52,13 @@ export class ContactComponent {
   readonly address =
     'Showroom, Unit 41, Building No. 349, Street 340, Zone 56, Al Ain Complex, Salwa Road, Doha, Qatar';
 
-  readonly mapQuery = 'Al+Ain+Complex+Salwa+Road+Doha+Qatar';
-  readonly mapEmbedUrl = `https://maps.google.com/maps?q=${this.mapQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
-  readonly mapLinkUrl = `https://maps.google.com/?q=${this.mapQuery}`;
+  readonly mapLat = 25.24449713777429;
+  readonly mapLng = 51.465221642318326;
+  readonly mapCoords = `${this.mapLat},${this.mapLng}`;
+  readonly mapLinkUrl = `https://www.google.com/maps?q=${this.mapCoords}`;
+  readonly mapEmbedUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+    `https://www.google.com/maps?q=${this.mapCoords}&z=16&output=embed`,
+  );
 
   readonly phones = [
     { display: '+974 3064 4006', tel: '+97430644006' },
