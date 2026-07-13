@@ -3,6 +3,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RevealDirective } from '../../directives/reveal.directive';
 import { CountUpDirective } from '../../directives/count-up.directive';
+import { ContactService } from '../../services/contact.service';
 
 interface HeroStat {
   id: string;
@@ -57,6 +58,7 @@ interface FaqItem {
 })
 export class ContactComponent {
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly contactService = inject(ContactService);
 
   readonly companyEn = 'Jama Go Security Equipment';
   readonly companySub = 'Jama Q Security Solutions';
@@ -233,7 +235,9 @@ export class ContactComponent {
   ];
 
   readonly openFaq = signal<number | null>(0);
+  readonly submitting = signal(false);
   readonly sent = signal(false);
+  readonly error = signal<string | null>(null);
 
   toggleFaq(index: number): void {
     this.openFaq.update((current) => (current === index ? null : index));
@@ -241,9 +245,45 @@ export class ContactComponent {
 
   handleSubmit(event: Event): void {
     event.preventDefault();
-    if (this.sent()) return;
+    if (this.submitting() || this.sent()) return;
 
     const form = event.target as HTMLFormElement;
+    const data = new FormData(form);
+    const payload = {
+      fullName: String(data.get('name') ?? '').trim(),
+      email: String(data.get('email') ?? '').trim(),
+      phone: String(data.get('phone') ?? '').trim() || null,
+      service: String(data.get('service') ?? '').trim(),
+      message: String(data.get('msg') ?? '').trim(),
+    };
+
+    if (!payload.fullName || !payload.email || !payload.service || !payload.message) {
+      this.error.set('Please fill in all required fields.');
+      return;
+    }
+
+    this.submitting.set(true);
+    this.error.set(null);
+
+    this.contactService.submit(payload).subscribe({
+      next: () => {
+        form.reset();
+        this.submitting.set(false);
+        this.sent.set(true);
+        setTimeout(() => this.sent.set(false), 5000);
+      },
+      error: () => {
+        this.submitting.set(false);
+        this.error.set('Could not send your message right now. Try WhatsApp or email below.');
+      },
+    });
+  }
+
+  sendViaWhatsApp(event: Event): void {
+    event.preventDefault();
+    const form = (event.target as HTMLElement).closest('form');
+    if (!form) return;
+
     const data = new FormData(form);
     const name = String(data.get('name') ?? '').trim();
     const email = String(data.get('email') ?? '').trim();
@@ -265,10 +305,6 @@ export class ContactComponent {
 
     const whatsappSendUrl = `https://wa.me/${this.primaryPhone.tel.replace('+', '')}?text=${encodeURIComponent(text)}`;
     window.open(whatsappSendUrl, '_blank', 'noopener,noreferrer');
-
-    form.reset();
-    this.sent.set(true);
-    setTimeout(() => this.sent.set(false), 4000);
   }
 
   buildEmailLink(event: Event): void {
