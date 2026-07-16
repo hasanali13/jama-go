@@ -1,0 +1,135 @@
+.admin-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.admin-page-header h1 {
+  font-size: 1.8rem;
+}
+
+.admin-page-header p,
+.admin-muted {
+  color: var(--muted);
+}
+
+.admin-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.admin-form {
+  margin-bottom: 20px;
+}
+
+.admin-form h2 {
+  margin-bottom: 16px;
+  font-size: 1.15rem;
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.admin-span-2 {
+  grid-column: span 2;
+}
+
+.admin-form label {
+  display: grid;
+  gap: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.admin-form input,
+.admin-form textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font: inherit;
+  background: #fff;
+}
+
+.admin-checkbox {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  align-self: end;
+}
+
+.admin-checkbox input {
+  width: auto;
+}
+
+.admin-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  padding: 14px 10px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.admin-table small {
+  display: block;
+  color: var(--muted);
+  margin-top: 4px;
+  max-width: 420px;
+}
+
+.admin-actions {
+  white-space: nowrap;
+}
+
+.admin-badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.08);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.admin-badge--active {
+  background: rgba(37, 148, 210, 0.12);
+  color: var(--brand-strong);
+}
+
+.admin-error {
+  color: #b42318;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 760px) {
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-span-2 {
+    grid-column: auto;
+  }
+}

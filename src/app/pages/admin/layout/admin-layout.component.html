@@ -1,0 +1,24 @@
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <p class="admin-eyebrow">Jama Go</p>
+      <h2>Admin</h2>
+    </div>
+
+    <nav class="admin-nav">
+      <a routerLink="/admin/staff" routerLinkActive="active">Staff</a>
+      <a routerLink="/admin/contacts" routerLinkActive="active">Contacts</a>
+      <a routerLink="/" class="admin-nav-muted">Back to site</a>
+    </nav>
+
+    <div class="admin-user">
+      <p>{{ auth.currentUser()?.fullName }}</p>
+      <small>{{ auth.currentUser()?.email }}</small>
+      <button type="button" class="btn btn-ghost btn-sm" (click)="logout()">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <router-outlet />
+  </main>
+</div>

@@ -563,6 +563,12 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 8px;
 }
 
+.team-department {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
 /* Footer */
 .site-footer { border-top: 1px solid var(--line); background: var(--bg-2); padding: 48px 0 28px; }
 .footer-inner { display: flex; justify-content: space-between; gap: 30px; flex-wrap: wrap; padding-bottom: 28px; border-bottom: 1px solid var(--line); }

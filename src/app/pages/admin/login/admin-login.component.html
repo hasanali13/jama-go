@@ -1,0 +1,33 @@
+<section class="admin-login">
+  <div class="admin-login-card">
+    <p class="admin-eyebrow">Jama Go Security</p>
+    <h1>Admin Sign In</h1>
+    <p class="admin-subtitle">Manage staff profiles and contact submissions.</p>
+
+    <form (submit)="submit($event)">
+      <label>
+        Email
+        <input type="email" name="email" [(ngModel)]="email" required autocomplete="username" />
+      </label>
+
+      <label>
+        Password
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          autocomplete="current-password"
+        />
+      </label>
+
+      @if (error()) {
+        <p class="admin-error">{{ error() }}</p>
+      }
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="loading()">
+        {{ loading() ? 'Signing in…' : 'Sign In' }}
+      </button>
+    </form>
+  </div>
+</section>

@@ -9,15 +9,24 @@
       </p>
     </div>
 
-    <div class="cards">
-      @for (member of team; track member.role) {
-        <article appReveal class="feature team-card">
-          <div class="feature-icon">👤</div>
-          <h3>{{ member.name }}</h3>
-          <p class="team-role">{{ member.role }}</p>
-          <p>{{ member.bio }}</p>
-        </article>
-      }
-    </div>
+    @if (loading()) {
+      <p>Loading team members...</p>
+    } @else if (loadFailed()) {
+      <p>Team information is temporarily unavailable. Please try again later.</p>
+    } @else {
+      <div class="cards">
+        @for (member of team(); track member.id) {
+          <article appReveal class="feature team-card">
+            <div class="feature-icon">👤</div>
+            <h3>{{ member.fullName }}</h3>
+            <p class="team-role">{{ member.role }}</p>
+            @if (member.department) {
+              <p class="team-department">{{ member.department }}</p>
+            }
+            <p>{{ member.responsibility }}</p>
+          </article>
+        }
+      </div>
+    }
   </div>
 </section>

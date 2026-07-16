@@ -1,0 +1,53 @@
+<section class="admin-page">
+  <header class="admin-page-header">
+    <div>
+      <h1>Contact submissions</h1>
+      <p>Review enquiries sent from the public contact form.</p>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p class="admin-error">{{ error() }}</p>
+  }
+
+  <div class="admin-panel">
+    @if (loading()) {
+      <p class="admin-muted">Loading submissions…</p>
+    } @else if (submissions().length === 0) {
+      <p class="admin-muted">No submissions yet.</p>
+    } @else {
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Received</th>
+              <th>Contact</th>
+              <th>Service</th>
+              <th>Message</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of submissions(); track item.id) {
+              <tr>
+                <td>{{ formatDate(item.createdAt) }}</td>
+                <td>
+                  <strong>{{ item.fullName }}</strong>
+                  <small>{{ item.email }}</small>
+                  @if (item.phone) {
+                    <small>{{ item.phone }}</small>
+                  }
+                </td>
+                <td>{{ item.service }}</td>
+                <td class="admin-message">{{ item.message }}</td>
+                <td>
+                  <span class="admin-badge">{{ item.status }}</span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

@@ -1,0 +1,103 @@
+<section class="admin-page">
+  <header class="admin-page-header">
+    <div>
+      <h1>Staff</h1>
+      <p>Manage team members shown on the public site.</p>
+    </div>
+    <button type="button" class="btn btn-primary btn-sm" (click)="startCreate()">Add staff</button>
+  </header>
+
+  @if (error()) {
+    <p class="admin-error">{{ error() }}</p>
+  }
+
+  @if (showForm()) {
+    <form class="admin-panel admin-form" (submit)="save($event)">
+      <h2>{{ editingId() ? 'Edit staff member' : 'New staff member' }}</h2>
+
+      <div class="admin-form-grid">
+        <label>
+          Full name
+          <input [(ngModel)]="form.fullName" name="fullName" required />
+        </label>
+
+        <label>
+          Role
+          <input [(ngModel)]="form.role" name="role" required />
+        </label>
+
+        <label class="admin-span-2">
+          Responsibility
+          <textarea [(ngModel)]="form.responsibility" name="responsibility" rows="3" required></textarea>
+        </label>
+
+        <label>
+          Department
+          <input [(ngModel)]="form.department" name="department" />
+        </label>
+
+        <label>
+          Display order
+          <input type="number" [(ngModel)]="form.displayOrder" name="displayOrder" min="0" />
+        </label>
+
+        <label class="admin-checkbox">
+          <input type="checkbox" [(ngModel)]="form.isActive" name="isActive" />
+          Active on public site
+        </label>
+      </div>
+
+      <div class="admin-form-actions">
+        <button type="button" class="btn btn-ghost btn-sm" (click)="cancelForm()">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : 'Save' }}
+        </button>
+      </div>
+    </form>
+  }
+
+  <div class="admin-panel">
+    @if (loading()) {
+      <p class="admin-muted">Loading staff…</p>
+    } @else if (staff().length === 0) {
+      <p class="admin-muted">No staff members yet.</p>
+    } @else {
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Department</th>
+              <th>Order</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (member of staff(); track member.id) {
+              <tr>
+                <td>
+                  <strong>{{ member.fullName }}</strong>
+                  <small>{{ member.responsibility }}</small>
+                </td>
+                <td>{{ member.role }}</td>
+                <td>{{ member.department || '—' }}</td>
+                <td>{{ member.displayOrder }}</td>
+                <td>
+                  <span class="admin-badge" [class.admin-badge--active]="member.isActive">
+                    {{ member.isActive ? 'Active' : 'Hidden' }}
+                  </span>
+                </td>
+                <td class="admin-actions">
+                  <button type="button" class="btn btn-ghost btn-sm" (click)="startEdit(member)">Edit</button>
+                  <button type="button" class="btn btn-ghost btn-sm" (click)="remove(member)">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
