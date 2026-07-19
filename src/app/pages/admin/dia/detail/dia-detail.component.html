@@ -1,0 +1,99 @@
+<section class="admin-page dia-page">
+  @if (loading()) {
+    <div class="admin-panel"><app-dia-skeleton /></div>
+  } @else if (error()) {
+    <div class="admin-panel">
+      <app-dia-empty-state
+        title="Inspection unavailable"
+        [message]="error()"
+        actionLabel="Try again"
+        (action)="load()"
+      />
+    </div>
+  } @else if (dia(); as item) {
+    <header class="admin-page-header">
+      <div>
+        <span class="admin-kicker">DIA inspection</span>
+        <h1>{{ item.diaNumber }}</h1>
+        <p>{{ item.clientName }} · {{ item.clientLocation }}</p>
+      </div>
+      <div class="dia-header-actions">
+        <a mat-stroked-button routerLink="/admin/dia/list">Back to list</a>
+        <a mat-flat-button [routerLink]="['/admin/dia', item.id, 'edit']">Edit</a>
+      </div>
+    </header>
+
+    <div class="admin-panel dia-progress-panel">
+      <div class="dia-progress-heading">
+        <div>
+          <span>Inspection progress</span>
+          <strong>{{ progress(item) }}%</strong>
+        </div>
+        <app-dia-status-chip [status]="item.status" [label]="statusLabel(item.status)" />
+      </div>
+      <mat-progress-bar
+        mode="determinate"
+        [value]="progress(item)"
+        [class.dia-progress-complete]="item.status === 'Completed'"
+      />
+      <p>
+        @if (item.status === 'Completed') {
+          Inspection cycle completed.
+        } @else if (item.nextInspectionDate) {
+          Next inspection {{ item.nextInspectionDate | date: 'longDate' }}
+          ({{ item.remainingDays }} days remaining).
+        } @else {
+          Activate this DIA to start its quarterly schedule.
+        }
+      </p>
+    </div>
+
+    <div class="dia-detail-grid">
+      <section class="admin-panel">
+        <div class="admin-panel-title"><h2>Client information</h2></div>
+        <dl class="dia-details">
+          <div><dt>DIA Number</dt><dd>{{ item.diaNumber }}</dd></div>
+          <div><dt>Client Number</dt><dd>{{ item.clientNumber }}</dd></div>
+          <div><dt>Client Name</dt><dd>{{ item.clientName }}</dd></div>
+          <div><dt>Client Location</dt><dd>{{ item.clientLocation }}</dd></div>
+          <div><dt>Active</dt><dd>{{ item.isActive ? 'Yes' : 'No' }}</dd></div>
+          <div><dt>Status</dt><dd>{{ statusLabel(item.status) }}</dd></div>
+        </dl>
+      </section>
+
+      <section class="admin-panel">
+        <div class="admin-panel-title"><h2>Inspection schedule</h2></div>
+        <dl class="dia-details">
+          <div><dt>Current Quarter</dt><dd>{{ item.currentQuarter ? 'Quarter ' + item.currentQuarter : '—' }}</dd></div>
+          <div><dt>Activated Date</dt><dd>{{ (item.activatedDate | date: 'longDate') || '—' }}</dd></div>
+          <div><dt>Quarter Start</dt><dd>{{ (item.quarterStartDate | date: 'longDate') || '—' }}</dd></div>
+          <div><dt>Quarter End</dt><dd>{{ (item.quarterEndDate | date: 'longDate') || '—' }}</dd></div>
+          <div><dt>Next Inspection</dt><dd>{{ (item.nextInspectionDate | date: 'longDate') || '—' }}</dd></div>
+          <div><dt>Remaining Days</dt><dd>{{ item.remainingDays }}</dd></div>
+        </dl>
+      </section>
+
+      <section class="admin-panel">
+        <div class="admin-panel-title"><h2>Record audit</h2></div>
+        <dl class="dia-details">
+          <div><dt>Created Date</dt><dd>{{ item.createdDate | date: 'medium' }}</dd></div>
+          <div><dt>Created By</dt><dd>{{ item.createdBy || '—' }}</dd></div>
+          <div><dt>Updated Date</dt><dd>{{ (item.updatedDate | date: 'medium') || '—' }}</dd></div>
+          <div><dt>Updated By</dt><dd>{{ item.updatedBy || '—' }}</dd></div>
+        </dl>
+      </section>
+    </div>
+
+    <div class="dia-detail-actions admin-panel">
+      <div><h2>Record actions</h2><p>Manage this DIA inspection lifecycle.</p></div>
+      <div class="dia-header-actions">
+        @if (item.isActive) {
+          <button mat-stroked-button type="button" [disabled]="acting()" (click)="confirm('deactivate')">Deactivate</button>
+        } @else {
+          <button mat-flat-button type="button" [disabled]="acting()" (click)="confirm('activate')">Activate</button>
+        }
+        <button mat-stroked-button class="dia-danger" type="button" [disabled]="acting()" (click)="confirm('archive')">Archive</button>
+      </div>
+    </div>
+  }
+</section>

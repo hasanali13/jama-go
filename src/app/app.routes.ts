@@ -28,6 +28,11 @@ export const routes: Routes = [
         children: [
           { path: '', pathMatch: 'full', redirectTo: 'staff' },
           {
+            path: 'dia',
+            loadChildren: () =>
+              import('./pages/admin/dia/dia.routes').then((module) => module.DIA_ROUTES),
+          },
+          {
             path: 'staff/new',
             component: StaffEditorComponent,
             title: 'Add Staff — Jama Go Admin',

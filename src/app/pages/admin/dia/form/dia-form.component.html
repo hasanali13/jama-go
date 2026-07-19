@@ -1,0 +1,61 @@
+<section class="admin-page dia-page dia-form-page">
+  <header class="admin-page-header">
+    <div>
+      <span class="admin-kicker">{{ isEdit ? 'Update record' : 'New inspection' }}</span>
+      <h1>{{ isEdit ? 'Edit DIA inspection' : 'Create DIA inspection' }}</h1>
+      <p>{{ isEdit ? 'Update the client and DIA reference details.' : 'Add a client record before activating its inspection schedule.' }}</p>
+    </div>
+    <a mat-stroked-button routerLink="/admin/dia/list">Back to list</a>
+  </header>
+
+  <div class="admin-panel">
+    @if (loading()) {
+      <app-dia-skeleton />
+    } @else if (loadError()) {
+      <app-dia-empty-state
+        title="Record unavailable"
+        [message]="loadError()"
+        actionLabel="Try again"
+        (action)="retry()"
+      />
+    } @else {
+      <form class="dia-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        @if (saveError()) {
+          <div class="admin-error" role="alert">{{ saveError() }}</div>
+        }
+
+        <mat-form-field appearance="outline">
+          <mat-label>DIA Number</mat-label>
+          <input matInput formControlName="diaNumber" autocomplete="off" maxlength="100" />
+          @if (hasError('diaNumber')) { <mat-error>DIA Number is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Client Number</mat-label>
+          <input matInput formControlName="clientNumber" autocomplete="off" maxlength="100" />
+          @if (hasError('clientNumber')) { <mat-error>Client Number is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Client Name</mat-label>
+          <input matInput formControlName="clientName" autocomplete="organization" maxlength="200" />
+          @if (hasError('clientName')) { <mat-error>Client Name is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Client Location</mat-label>
+          <textarea matInput formControlName="clientLocation" rows="3" autocomplete="street-address" maxlength="300"></textarea>
+          @if (hasError('clientLocation')) { <mat-error>Client Location is required.</mat-error> }
+        </mat-form-field>
+
+        <div class="dia-form-actions">
+          <a mat-button routerLink="/admin/dia/list">Cancel</a>
+          <button mat-flat-button type="submit" [disabled]="saving()">
+            @if (saving()) { <mat-spinner diameter="20" /> }
+            {{ saving() ? 'Saving…' : (isEdit ? 'Save changes' : 'Create DIA') }}
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</section>

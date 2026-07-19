@@ -1,0 +1,147 @@
+<section class="admin-page dia-page">
+  <header class="admin-page-header">
+    <div>
+      <span class="admin-kicker">DIA register</span>
+      <h1>Inspection records</h1>
+      <p>Search, filter and manage client inspection schedules.</p>
+    </div>
+    <a mat-flat-button routerLink="/admin/dia/new">Create DIA</a>
+  </header>
+
+  <div class="dia-filters" aria-label="DIA filters">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Search inspections</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="DIA, client or location" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Status</mat-label>
+      <mat-select [formControl]="statusControl">
+        <mat-option value="">All statuses</mat-option>
+        @for (status of statuses; track status) {
+          <mat-option [value]="status">{{ statusLabel(status) }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    @if (searchControl.value || statusControl.value) {
+      <button mat-button type="button" (click)="clearFilters()">Clear filters</button>
+    }
+  </div>
+
+  <div class="admin-panel dia-list-panel">
+    @if (loading()) {
+      <app-dia-skeleton />
+    } @else if (error()) {
+      <app-dia-empty-state
+        title="Inspections unavailable"
+        [message]="error()"
+        actionLabel="Try again"
+        (action)="retry()"
+      />
+    } @else if (result(); as page) {
+      @if (page.items.length) {
+        <div class="dia-table-wrap">
+          <table
+            mat-table
+            matSort
+            [dataSource]="page.items"
+            [matSortActive]="query().sortBy || 'createdDate'"
+            [matSortDirection]="query().sortDirection || 'desc'"
+            matSortDisableClear
+            (matSortChange)="sortChanged($event)"
+          >
+            <ng-container matColumnDef="diaNumber">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>DIA number</th>
+              <td mat-cell *matCellDef="let item"><strong>{{ item.diaNumber }}</strong></td>
+            </ng-container>
+            <ng-container matColumnDef="clientNumber">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Client number</th>
+              <td mat-cell *matCellDef="let item">{{ item.clientNumber }}</td>
+            </ng-container>
+            <ng-container matColumnDef="clientName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Client name</th>
+              <td mat-cell *matCellDef="let item">{{ item.clientName }}</td>
+            </ng-container>
+            <ng-container matColumnDef="clientLocation">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Location</th>
+              <td mat-cell *matCellDef="let item">{{ item.clientLocation }}</td>
+            </ng-container>
+            <ng-container matColumnDef="currentQuarter">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Quarter</th>
+              <td mat-cell *matCellDef="let item">{{ quarterLabel(item) }}</td>
+            </ng-container>
+            <ng-container matColumnDef="activatedDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Activated</th>
+              <td mat-cell *matCellDef="let item">{{ (item.activatedDate | date: 'mediumDate') || '—' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="nextInspectionDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Next inspection</th>
+              <td mat-cell *matCellDef="let item">{{ (item.nextInspectionDate | date: 'mediumDate') || '—' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+              <td mat-cell *matCellDef="let item">
+                <app-dia-status-chip [status]="item.status" [label]="statusLabel(item.status)" />
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let item">
+                <div class="dia-actions">
+                  <a mat-button [routerLink]="['/admin/dia', item.id]">View</a>
+                  <a mat-button [routerLink]="['/admin/dia', item.id, 'edit']">Edit</a>
+                  @if (item.isActive) {
+                    <button mat-button type="button" [disabled]="actionId() === item.id" (click)="confirmAction(item, 'deactivate')">Deactivate</button>
+                  } @else {
+                    <button mat-button type="button" [disabled]="actionId() === item.id" (click)="confirmAction(item, 'activate')">Activate</button>
+                  }
+                  <button mat-button class="dia-danger" type="button" [disabled]="actionId() === item.id" (click)="confirmAction(item, 'archive')">Archive</button>
+                </div>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+
+        <div class="dia-mobile-cards">
+          @for (item of page.items; track item.id) {
+            <article class="dia-record-card">
+              <header>
+                <div><strong>{{ item.diaNumber }}</strong><span>{{ item.clientNumber }}</span></div>
+                <app-dia-status-chip [status]="item.status" [label]="statusLabel(item.status)" />
+              </header>
+              <h2>{{ item.clientName }}</h2>
+              <p>{{ item.clientLocation }}</p>
+              <dl>
+                <div><dt>Quarter</dt><dd>{{ quarterLabel(item) }}</dd></div>
+                <div><dt>Activated</dt><dd>{{ (item.activatedDate | date: 'mediumDate') || '—' }}</dd></div>
+                <div><dt>Next inspection</dt><dd>{{ (item.nextInspectionDate | date: 'mediumDate') || '—' }}</dd></div>
+              </dl>
+              <div class="dia-actions">
+                <a mat-button [routerLink]="['/admin/dia', item.id]">View</a>
+                <a mat-button [routerLink]="['/admin/dia', item.id, 'edit']">Edit</a>
+                <button mat-button type="button" [disabled]="actionId() === item.id" (click)="confirmAction(item, item.isActive ? 'deactivate' : 'activate')">{{ item.isActive ? 'Deactivate' : 'Activate' }}</button>
+                <button mat-button class="dia-danger" type="button" [disabled]="actionId() === item.id" (click)="confirmAction(item, 'archive')">Archive</button>
+              </div>
+            </article>
+          }
+        </div>
+
+        <mat-paginator
+          [length]="page.totalCount"
+          [pageIndex]="page.pageNumber - 1"
+          [pageSize]="page.pageSize"
+          [pageSizeOptions]="[10, 25, 50]"
+          showFirstLastButtons
+          aria-label="Select DIA page"
+          (page)="pageChanged($event)"
+        />
+      } @else {
+        <app-dia-empty-state
+          title="No DIA records found"
+          message="Try changing your filters or create the first DIA inspection."
+        />
+      }
+    }
+  </div>
+</section>

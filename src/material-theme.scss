@@ -1,0 +1,24 @@
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$orange-palette,
+    ),
+    typography: (
+      plain-family: 'Inter, system-ui, sans-serif',
+      brand-family: 'Sora, Inter, sans-serif',
+    ),
+    density: 0,
+  ));
+
+  --mat-sys-primary: #1478b3;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #d9effb;
+  --mat-sys-on-primary-container: #082f49;
+  --mat-sys-tertiary: #ef7f16;
+  --mat-sys-on-tertiary: #ffffff;
+  --mat-sys-tertiary-container: #ffead6;
+  --mat-sys-on-tertiary-container: #5b2500;
+}
