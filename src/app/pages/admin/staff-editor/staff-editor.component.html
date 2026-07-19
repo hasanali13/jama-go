@@ -1,0 +1,118 @@
+<section class="staff-editor-page">
+  <button type="button" class="back-link" (click)="cancel()">
+    <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6" /></svg>
+    Back to staff
+  </button>
+
+  <header class="editor-header">
+    <div class="editor-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
+        <path d="M4 21a8 8 0 0 1 16 0M19 8v6M16 11h6" />
+      </svg>
+    </div>
+    <div>
+      <p class="editor-eyebrow">{{ isEditing ? 'Update profile' : 'Create profile' }}</p>
+      <h1>{{ isEditing ? 'Edit staff member' : 'New staff member' }}</h1>
+      <p>
+        {{
+          isEditing
+            ? 'Update this team member’s account and public profile settings.'
+            : 'Create secure login access for a new Jama Go team member.'
+        }}
+      </p>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p class="admin-error">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <div class="editor-card editor-loading">Loading staff account…</div>
+  } @else {
+    <form class="editor-card" (submit)="save($event)">
+      <div class="form-section-heading">
+        <span>Account details</span>
+        <small>Fields marked required must be completed.</small>
+      </div>
+
+      <div class="editor-grid">
+        <label>
+          <span>Full name <i>*</i></span>
+          <input
+            [(ngModel)]="form.fullName"
+            name="fullName"
+            required
+            autocomplete="name"
+            placeholder="e.g. Sara Al-Harbi"
+          />
+        </label>
+
+        <label>
+          <span>Email <i>*</i></span>
+          <input
+            type="email"
+            [(ngModel)]="form.email"
+            name="email"
+            required
+            autocomplete="off"
+            placeholder="name@jamago.qa"
+          />
+        </label>
+
+        <label>
+          <span>
+            {{ isEditing ? 'New password' : 'Password' }}
+            @if (!isEditing || !hasLoginAccount()) { <i>*</i> }
+          </span>
+          <input
+            type="password"
+            [(ngModel)]="form.password"
+            name="password"
+            [required]="!isEditing || !hasLoginAccount()"
+            minlength="8"
+            autocomplete="new-password"
+            placeholder="At least 8 characters"
+          />
+          <small>
+            {{
+              isEditing && hasLoginAccount()
+                ? 'Leave blank to keep the current password.'
+                : 'Use uppercase, lowercase, and a number.'
+            }}
+          </small>
+        </label>
+
+        <label>
+          <span>Department</span>
+          <select
+            [(ngModel)]="form.department"
+            name="department"
+          >
+            <option [ngValue]="null">Select department</option>
+            @for (department of departments; track department.value) {
+              <option [ngValue]="department.value">{{ department.label }}</option>
+            }
+          </select>
+        </label>
+      </div>
+
+      <label class="visibility-control">
+        <input type="checkbox" [(ngModel)]="form.isActive" name="isActive" />
+        <span class="switch-track"><i></i></span>
+        <span>
+          <strong>Active on public site</strong>
+          <small>Show this team member in the public Our Team section and allow login.</small>
+        </span>
+      </label>
+
+      <footer class="editor-actions">
+        <button type="button" class="btn-admin btn-admin-ghost" (click)="cancel()">Cancel</button>
+        <button type="submit" class="btn-admin btn-admin-primary" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : isEditing ? 'Save changes' : 'Create staff account' }}
+        </button>
+      </footer>
+    </form>
+  }
+</section>

@@ -20,6 +20,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         !isLoginRequest
       ) {
         auth.handleUnauthorized();
+      } else if (
+        error instanceof HttpErrorResponse &&
+        error.status === 403 &&
+        !isLoginRequest
+      ) {
+        auth.handleForbidden();
       }
 
       return throwError(() => error);

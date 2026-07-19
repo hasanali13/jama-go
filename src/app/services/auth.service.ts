@@ -34,6 +34,18 @@ export class AuthService {
     return !!this.getToken() && !!this.currentUser();
   }
 
+  isAdmin(): boolean {
+    return this.currentUser()?.role === 'Admin';
+  }
+
+  isStaff(): boolean {
+    return this.currentUser()?.role === 'Staff';
+  }
+
+  landingRoute(user = this.currentUser()): string {
+    return user?.role === 'Staff' ? '/staff/profile' : '/admin/staff';
+  }
+
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http
       .post<ApiResult<LoginResponse>>(`${environment.apiUrl}/auth/login`, request)
@@ -43,18 +55,38 @@ export class AuthService {
       );
   }
 
+  validateSession(): Observable<UserSummary> {
+    return this.http
+      .get<ApiResult<UserSummary>>(`${environment.apiUrl}/auth/me`)
+      .pipe(
+        map((result) => unwrapApiResult(result)),
+        tap((user) => {
+          localStorage.setItem(USER_KEY, JSON.stringify(user));
+          this.currentUser.set(user);
+        }),
+      );
+  }
+
   logout(): void {
     this.clearSession();
     void this.router.navigate(['/admin/login']);
   }
 
-  /** Clears an invalid/expired session. Redirects only when already in admin. */
+  /** Clears an invalid/expired session and returns to the shared secure login. */
   handleUnauthorized(): void {
-    const onAdmin = this.router.url.startsWith('/admin');
+    const onPortal =
+      this.router.url.startsWith('/admin') || this.router.url.startsWith('/staff');
     this.clearSession();
 
-    if (onAdmin && !this.router.url.startsWith('/admin/login')) {
+    if (onPortal && !this.router.url.startsWith('/admin/login')) {
       void this.router.navigate(['/admin/login']);
+    }
+  }
+
+  handleForbidden(): void {
+    const route = this.landingRoute();
+    if (this.router.url.split('?')[0] !== route) {
+      void this.router.navigate([route]);
     }
   }
 

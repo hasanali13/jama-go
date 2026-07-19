@@ -1,0 +1,51 @@
+<main class="staff-portal">
+  <header class="portal-header">
+    <img src="/JamaGoLogo.png" alt="Jama Go" width="220" height="86" />
+    <button type="button" class="portal-button portal-button--ghost" (click)="logout()">Sign out</button>
+  </header>
+
+  <section class="profile-shell">
+    <div class="profile-intro">
+      <p class="eyebrow">Staff portal</p>
+      <h1>My profile</h1>
+      <p>Your secure Jama Go account and public team information.</p>
+    </div>
+
+    @if (error()) {
+      <div class="message message--error">
+        <p>{{ error() }}</p>
+        <button type="button" class="portal-button" (click)="loadProfile()">Try again</button>
+      </div>
+    } @else if (loading()) {
+      <div class="profile-card profile-loading">Loading your profile…</div>
+    } @else if (profile(); as member) {
+      <article class="profile-card">
+        <div class="profile-avatar" aria-hidden="true">
+          {{ member.fullName.slice(0, 2).toUpperCase() }}
+        </div>
+        <div class="profile-heading">
+          <span class="status" [class.status--hidden]="!member.isActive">
+            {{ member.isActive ? 'Active' : 'Hidden' }}
+          </span>
+          <h2>{{ member.fullName }}</h2>
+          <p>{{ member.role }}</p>
+        </div>
+
+        <dl class="profile-details">
+          <div>
+            <dt>Email</dt>
+            <dd>{{ member.email }}</dd>
+          </div>
+          <div>
+            <dt>Department</dt>
+            <dd>{{ member.department || 'Not assigned' }}</dd>
+          </div>
+          <div>
+            <dt>Responsibility</dt>
+            <dd>{{ member.responsibility || 'No public description yet' }}</dd>
+          </div>
+        </dl>
+      </article>
+    }
+  </section>
+</main>

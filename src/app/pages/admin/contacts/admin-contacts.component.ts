@@ -1,4 +1,11 @@
-import { Component, ChangeDetectionStrategy, DestroyRef, inject, signal } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  DestroyRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { ContactService } from '../../../services/contact.service';
@@ -19,8 +26,49 @@ export class AdminContactsComponent {
   readonly submissions = signal<ContactSubmission[]>([]);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+  readonly query = signal('');
+
+  readonly serviceCount = computed(() => {
+    const set = new Set(this.submissions().map((s) => s.service).filter(Boolean));
+    return set.size;
+  });
+
+  readonly recentCount = computed(() => {
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    return this.submissions().filter((s) => Date.parse(s.createdAt) >= weekAgo).length;
+  });
+
+  readonly withPhoneCount = computed(
+    () => this.submissions().filter((s) => !!s.phone?.trim()).length,
+  );
+
+  readonly filtered = computed(() => {
+    const q = this.query().trim().toLowerCase();
+    const items = [...this.submissions()].sort(
+      (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt),
+    );
+    if (!q) {
+      return items;
+    }
+    return items.filter((item) =>
+      [item.fullName, item.email, item.phone, item.service, item.message, item.status]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(q)),
+    );
+  });
 
   constructor() {
+    this.reload();
+  }
+
+  onSearch(value: string): void {
+    this.query.set(value);
+  }
+
+  reload(): void {
+    this.loading.set(true);
+    this.error.set(null);
+
     this.contactService
       .getAll()
       .pipe(
@@ -40,5 +88,12 @@ export class AdminContactsComponent {
       dateStyle: 'medium',
       timeStyle: 'short',
     });
+  }
+
+  initials(name: string): string {
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return 'EN';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
   }
 }

@@ -1,102 +1,115 @@
 <section class="admin-page">
   <header class="admin-page-header">
     <div>
-      <h1>Staff</h1>
-      <p>Manage team members shown on the public site.</p>
+      <p class="admin-kicker">Team roster</p>
+      <h1>Staff management</h1>
+      <p>Craft the public team section with clear roles, order, and live visibility.</p>
     </div>
-    <button type="button" class="btn btn-primary btn-sm" (click)="startCreate()">Add staff</button>
+    <button type="button" class="btn-admin btn-admin-primary" (click)="startCreate()">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+      Add staff
+    </button>
   </header>
 
+  <div class="admin-stats">
+    <article class="admin-stat admin-stat--blue">
+      <strong>{{ staff().length }}</strong>
+      <span>Total members</span>
+    </article>
+    <article class="admin-stat admin-stat--teal">
+      <strong>{{ activeCount() }}</strong>
+      <span>Live on website</span>
+    </article>
+    <article class="admin-stat admin-stat--orange">
+      <strong>{{ hiddenCount() }}</strong>
+      <span>Hidden profiles</span>
+    </article>
+    <article class="admin-stat admin-stat--ink">
+      <strong>{{ departments() }}</strong>
+      <span>Departments</span>
+    </article>
+  </div>
+
   @if (error()) {
-    <p class="admin-error">{{ error() }}</p>
+    <p class="admin-error staff-feedback">{{ error() }}</p>
   }
 
-  @if (showForm()) {
-    <form class="admin-panel admin-form" (submit)="save($event)">
-      <h2>{{ editingId() ? 'Edit staff member' : 'New staff member' }}</h2>
-
-      <div class="admin-form-grid">
-        <label>
-          Full name
-          <input [(ngModel)]="form.fullName" name="fullName" required />
-        </label>
-
-        <label>
-          Role
-          <input [(ngModel)]="form.role" name="role" required />
-        </label>
-
-        <label class="admin-span-2">
-          Responsibility
-          <textarea [(ngModel)]="form.responsibility" name="responsibility" rows="3" required></textarea>
-        </label>
-
-        <label>
-          Department
-          <input [(ngModel)]="form.department" name="department" />
-        </label>
-
-        <label>
-          Display order
-          <input type="number" [(ngModel)]="form.displayOrder" name="displayOrder" min="0" />
-        </label>
-
-        <label class="admin-checkbox">
-          <input type="checkbox" [(ngModel)]="form.isActive" name="isActive" />
-          Active on public site
-        </label>
-      </div>
-
-      <div class="admin-form-actions">
-        <button type="button" class="btn btn-ghost btn-sm" (click)="cancelForm()">Cancel</button>
-        <button type="submit" class="btn btn-primary btn-sm" [disabled]="saving()">
-          {{ saving() ? 'Saving…' : 'Save' }}
-        </button>
-      </div>
-    </form>
+  @if (success()) {
+    <p class="admin-success staff-feedback">{{ success() }}</p>
   }
+
+  <div class="admin-toolbar">
+    <label class="admin-search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+      <input
+        type="search"
+        [value]="query()"
+        (input)="onSearch($any($event.target).value)"
+        placeholder="Search name, email, role, department…"
+      />
+    </label>
+    <button type="button" class="btn-admin btn-admin-ghost" (click)="loadStaff()">Refresh</button>
+  </div>
 
   <div class="admin-panel">
     @if (loading()) {
-      <p class="admin-muted">Loading staff…</p>
-    } @else if (staff().length === 0) {
-      <p class="admin-muted">No staff members yet.</p>
+      <div class="admin-empty">
+        <strong>Loading staff…</strong>
+        <p class="admin-muted">Fetching the latest roster from the API.</p>
+      </div>
+    } @else if (filteredStaff().length === 0) {
+      <div class="admin-empty">
+        <strong>{{ staff().length ? 'No matches' : 'No staff yet' }}</strong>
+        <p class="admin-muted">
+          {{ staff().length ? 'Try another search term.' : 'Add your first team member to populate the public site.' }}
+        </p>
+      </div>
     } @else {
-      <div class="admin-table-wrap">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Role</th>
-              <th>Department</th>
-              <th>Order</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (member of staff(); track member.id) {
-              <tr>
-                <td>
-                  <strong>{{ member.fullName }}</strong>
-                  <small>{{ member.responsibility }}</small>
-                </td>
-                <td>{{ member.role }}</td>
-                <td>{{ member.department || '—' }}</td>
-                <td>{{ member.displayOrder }}</td>
-                <td>
-                  <span class="admin-badge" [class.admin-badge--active]="member.isActive">
-                    {{ member.isActive ? 'Active' : 'Hidden' }}
-                  </span>
-                </td>
-                <td class="admin-actions">
-                  <button type="button" class="btn btn-ghost btn-sm" (click)="startEdit(member)">Edit</button>
-                  <button type="button" class="btn btn-ghost btn-sm" (click)="remove(member)">Delete</button>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+      <div class="staff-grid">
+        @for (member of filteredStaff(); track member.id) {
+          <article class="staff-card" [class.staff-card--hidden]="!member.isActive">
+            <div class="staff-card-top">
+              <div class="staff-avatar" aria-hidden="true">{{ initials(member.fullName) }}</div>
+              <div class="staff-card-meta">
+                <h3>{{ member.fullName }}</h3>
+                <p>{{ member.role }}</p>
+                <small>{{ member.email || 'Login not configured' }}</small>
+              </div>
+              <span
+                class="admin-badge admin-badge--dot"
+                [class.admin-badge--active]="member.isActive"
+                [class.admin-badge--hidden]="!member.isActive"
+              >
+                {{ member.isActive ? 'Live' : 'Hidden' }}
+              </span>
+            </div>
+
+            <p class="staff-copy">{{ member.responsibility }}</p>
+
+            <div class="staff-tags">
+              <span class="tag">{{ member.department || 'General' }}</span>
+              <span class="tag tag-soft">Order {{ member.displayOrder }}</span>
+            </div>
+
+            <div class="staff-card-actions">
+              <button
+                type="button"
+                class="btn-admin btn-admin-ghost"
+                (click)="startEdit(member); $event.stopPropagation()"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                class="btn-admin btn-admin-danger"
+                [disabled]="deletingId() === member.id"
+                (click)="deleteStaff(member, $event)"
+              >
+                {{ deletingId() === member.id ? 'Deleting…' : 'Delete' }}
+              </button>
+            </div>
+          </article>
+        }
       </div>
     }
   </div>

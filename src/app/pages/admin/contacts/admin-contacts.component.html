@@ -1,52 +1,98 @@
 <section class="admin-page">
   <header class="admin-page-header">
     <div>
+      <p class="admin-kicker">Enquiry inbox</p>
       <h1>Contact submissions</h1>
-      <p>Review enquiries sent from the public contact form.</p>
+      <p>Review enquiries from the public site and respond with confidence.</p>
     </div>
+    <button type="button" class="btn-admin btn-admin-ghost" (click)="reload()">
+      <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36" /><path d="M21 3v6h-6" /></svg>
+      Refresh
+    </button>
   </header>
+
+  <div class="admin-stats">
+    <article class="admin-stat admin-stat--blue">
+      <strong>{{ submissions().length }}</strong>
+      <span>Total enquiries</span>
+    </article>
+    <article class="admin-stat admin-stat--orange">
+      <strong>{{ recentCount() }}</strong>
+      <span>Last 7 days</span>
+    </article>
+    <article class="admin-stat admin-stat--teal">
+      <strong>{{ serviceCount() }}</strong>
+      <span>Services requested</span>
+    </article>
+    <article class="admin-stat admin-stat--ink">
+      <strong>{{ withPhoneCount() }}</strong>
+      <span>With phone number</span>
+    </article>
+  </div>
 
   @if (error()) {
     <p class="admin-error">{{ error() }}</p>
   }
 
+  <div class="admin-toolbar">
+    <label class="admin-search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+      <input
+        type="search"
+        [value]="query()"
+        (input)="onSearch($any($event.target).value)"
+        placeholder="Search name, email, service, message…"
+      />
+    </label>
+  </div>
+
   <div class="admin-panel">
     @if (loading()) {
-      <p class="admin-muted">Loading submissions…</p>
-    } @else if (submissions().length === 0) {
-      <p class="admin-muted">No submissions yet.</p>
+      <div class="admin-empty">
+        <strong>Loading submissions…</strong>
+        <p class="admin-muted">Pulling the latest contact form entries.</p>
+      </div>
+    } @else if (filtered().length === 0) {
+      <div class="admin-empty">
+        <strong>{{ submissions().length ? 'No matches' : 'Inbox is clear' }}</strong>
+        <p class="admin-muted">
+          {{
+            submissions().length
+              ? 'Try another search term.'
+              : 'New enquiries from jamago.qa will appear here.'
+          }}
+        </p>
+      </div>
     } @else {
-      <div class="admin-table-wrap">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Received</th>
-              <th>Contact</th>
-              <th>Service</th>
-              <th>Message</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of submissions(); track item.id) {
-              <tr>
-                <td>{{ formatDate(item.createdAt) }}</td>
-                <td>
-                  <strong>{{ item.fullName }}</strong>
-                  <small>{{ item.email }}</small>
+      <div class="contact-list">
+        @for (item of filtered(); track item.id) {
+          <article class="contact-card">
+            <div class="contact-card-top">
+              <div class="contact-avatar" aria-hidden="true">{{ initials(item.fullName) }}</div>
+              <div class="contact-identity">
+                <h3>{{ item.fullName }}</h3>
+                <p>
+                  <a [href]="'mailto:' + item.email">{{ item.email }}</a>
                   @if (item.phone) {
-                    <small>{{ item.phone }}</small>
+                    <span>·</span>
+                    <a [href]="'tel:' + item.phone">{{ item.phone }}</a>
                   }
-                </td>
-                <td>{{ item.service }}</td>
-                <td class="admin-message">{{ item.message }}</td>
-                <td>
-                  <span class="admin-badge">{{ item.status }}</span>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+                </p>
+              </div>
+              <div class="contact-meta">
+                <span class="admin-badge admin-badge--new admin-badge--dot">{{ item.status }}</span>
+                <time>{{ formatDate(item.createdAt) }}</time>
+              </div>
+            </div>
+
+            <div class="contact-service">
+              <span>Service interest</span>
+              <strong>{{ item.service || 'General enquiry' }}</strong>
+            </div>
+
+            <p class="contact-message">{{ item.message }}</p>
+          </article>
+        }
       </div>
     }
   </div>

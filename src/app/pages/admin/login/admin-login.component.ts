@@ -130,8 +130,8 @@ export class AdminLoginComponent implements AfterViewInit, OnDestroy {
         finalize(() => this.loading.set(false)),
       )
       .subscribe({
-        next: () => {
-          void this.router.navigate(['/admin/staff']);
+        next: (response) => {
+          void this.router.navigate([this.auth.landingRoute(response.user)]);
         },
         error: (err: unknown) => {
           this.error.set(getApiErrorMessage(err, 'Invalid email or password.'));

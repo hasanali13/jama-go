@@ -15,18 +15,23 @@ import { FooterComponent } from './components/footer/footer.component';
 export class AppComponent {
   private readonly router = inject(Router);
 
-  /** Hide marketing header/footer on admin login and admin pages. */
+  /** Hide marketing header/footer on secure portal pages. */
   readonly showPublicShell = toSignal(
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-      map(() => !this.isAdminRoute(this.router.url)),
-      startWith(!this.isAdminRoute(this.router.url)),
+      map(() => !this.isPortalRoute(this.router.url)),
+      startWith(!this.isPortalRoute(this.router.url)),
     ),
-    { initialValue: !this.isAdminRoute(this.router.url) },
+    { initialValue: !this.isPortalRoute(this.router.url) },
   );
 
-  private isAdminRoute(url: string): boolean {
+  private isPortalRoute(url: string): boolean {
     const path = url.split('?')[0] ?? url;
-    return path === '/admin' || path.startsWith('/admin/');
+    return (
+      path === '/admin' ||
+      path.startsWith('/admin/') ||
+      path === '/staff' ||
+      path.startsWith('/staff/')
+    );
   }
 }

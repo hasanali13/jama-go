@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiResult, unwrapApiResult } from '../models/api-result.model';
 import {
+  AdminStaffMember,
   CreateStaffRequest,
   StaffMember,
   UpdateStaffRequest,
@@ -22,15 +23,21 @@ export class StaffService {
   }
 
   /** Admin: all staff including inactive. Requires Bearer token. */
-  getAll(): Observable<StaffMember[]> {
+  getAll(): Observable<AdminStaffMember[]> {
     return this.http
-      .get<ApiResult<StaffMember[]>>(`${this.baseUrl}/all`)
+      .get<ApiResult<AdminStaffMember[]>>(`${this.baseUrl}/all`)
       .pipe(map((result) => unwrapApiResult(result)));
   }
 
-  getById(id: string): Observable<StaffMember> {
+  getById(id: string): Observable<AdminStaffMember> {
     return this.http
-      .get<ApiResult<StaffMember>>(`${this.baseUrl}/${id}`)
+      .get<ApiResult<AdminStaffMember>>(`${this.baseUrl}/${id}`)
+      .pipe(map((result) => unwrapApiResult(result)));
+  }
+
+  getMine(): Observable<AdminStaffMember> {
+    return this.http
+      .get<ApiResult<AdminStaffMember>>(`${this.baseUrl}/me`)
       .pipe(map((result) => unwrapApiResult(result)));
   }
 
@@ -42,7 +49,7 @@ export class StaffService {
 
   update(id: string, request: UpdateStaffRequest): Observable<string> {
     return this.http
-      .put<ApiResult<string>>(`${this.baseUrl}/${id}`, { ...request, id })
+      .put<ApiResult<string>>(`${this.baseUrl}/${id}`, request)
       .pipe(map((result) => unwrapApiResult(result)));
   }
 

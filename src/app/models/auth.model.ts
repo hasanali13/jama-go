@@ -1,8 +1,10 @@
+export type UserRole = 'Admin' | 'Staff';
+
 export interface UserSummary {
   id: string;
   email: string;
   fullName: string;
-  role: string;
+  role: UserRole;
 }
 
 export interface LoginResponse {

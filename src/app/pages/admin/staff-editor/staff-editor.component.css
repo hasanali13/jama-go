@@ -1,0 +1,262 @@
+.staff-editor-page {
+  width: min(980px, 100%);
+  margin: 0 auto;
+  animation: admin-rise 0.4s ease both;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding: 0;
+  border: 0;
+  color: #1478b3;
+  background: transparent;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.back-link svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.18s ease;
+}
+
+.back-link:hover svg {
+  transform: translateX(-3px);
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.editor-icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 21px;
+  color: #fff;
+  background: linear-gradient(135deg, #f6993d, #2594d2);
+  box-shadow: 0 18px 34px -18px rgba(37, 148, 210, 0.9);
+}
+
+.editor-icon svg {
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.editor-eyebrow {
+  margin-bottom: 4px;
+  color: #1478b3;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.editor-header h1 {
+  color: #0b1f33;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  letter-spacing: -0.04em;
+}
+
+.editor-header > div:last-child > p:last-child {
+  margin-top: 5px;
+  color: #5d7288;
+}
+
+.editor-card {
+  padding: clamp(24px, 4vw, 42px);
+  border: 1px solid rgba(15, 40, 70, 0.09);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(246, 153, 61, 0.1), transparent 30%),
+    rgba(255, 255, 255, 0.94);
+  box-shadow: 0 28px 64px -40px rgba(11, 31, 51, 0.5);
+}
+
+.editor-loading {
+  color: #5d7288;
+  text-align: center;
+}
+
+.form-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(15, 40, 70, 0.09);
+}
+
+.form-section-heading span {
+  color: #0b1f33;
+  font-size: 1.08rem;
+  font-weight: 800;
+}
+
+.form-section-heading small {
+  color: #718398;
+}
+
+.editor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 22px;
+}
+
+.editor-grid label {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  color: #1a334d;
+  font-size: 0.92rem;
+  font-weight: 750;
+}
+
+.editor-grid label > span i {
+  color: #e11d48;
+  font-style: normal;
+}
+
+.editor-grid input,
+.editor-grid select {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 16px;
+  border: 1px solid rgba(15, 40, 70, 0.12);
+  border-radius: 15px;
+  color: #0b1f33;
+  background: #fff;
+  font: inherit;
+  font-weight: 500;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.editor-grid input:focus,
+.editor-grid select:focus {
+  outline: none;
+  border-color: rgba(37, 148, 210, 0.55);
+  box-shadow: 0 0 0 4px rgba(37, 148, 210, 0.12);
+}
+
+.editor-grid label > small {
+  color: #718398;
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.visibility-control {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 26px;
+  padding: 18px;
+  border: 1px solid rgba(37, 148, 210, 0.14);
+  border-radius: 18px;
+  background: linear-gradient(120deg, rgba(37, 148, 210, 0.08), rgba(246, 153, 61, 0.09));
+  cursor: pointer;
+}
+
+.visibility-control > input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.switch-track {
+  position: relative;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 27px;
+  border-radius: 999px;
+  background: #94a3b8;
+  transition: background 0.2s ease;
+}
+
+.switch-track i {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(11, 31, 51, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.visibility-control > input:checked + .switch-track {
+  background: #14b8a6;
+}
+
+.visibility-control > input:checked + .switch-track i {
+  transform: translateX(21px);
+}
+
+.visibility-control strong,
+.visibility-control small {
+  display: block;
+}
+
+.visibility-control strong {
+  color: #16324d;
+}
+
+.visibility-control small {
+  margin-top: 2px;
+  color: #5d7288;
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(15, 40, 70, 0.09);
+}
+
+@media (max-width: 720px) {
+  .editor-header {
+    align-items: flex-start;
+  }
+
+  .editor-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 17px;
+  }
+
+  .editor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .editor-actions .btn-admin {
+    flex: 1;
+  }
+}

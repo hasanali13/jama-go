@@ -112,14 +112,14 @@
           </div>
 
           <header class="heading login-reveal">
-            <p class="eyebrow">Admin vault</p>
+            <p class="eyebrow">Secure staff portal</p>
             <h1>Welcome back</h1>
             <p>Authenticate to enter the Jama Go command portal.</p>
           </header>
 
           <form class="login-form" (submit)="submit($event)" novalidate>
             <div class="field login-reveal">
-              <label for="admin-email">Username / email</label>
+              <label for="admin-email">Email</label>
               <div class="control">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <circle cx="12" cy="8" r="4" />
@@ -132,7 +132,7 @@
                   [(ngModel)]="email"
                   required
                   autocomplete="username"
-                  placeholder="Enter username"
+                  placeholder="Enter your email"
                 />
               </div>
             </div>
