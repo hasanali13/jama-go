@@ -1,32 +1,100 @@
 .admin-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 264px 1fr;
   background: var(--bg);
 }
 
 .admin-sidebar {
-  background: #0f172a;
-  color: #e2e8f0;
-  padding: 28px 20px;
+  position: relative;
+  padding: 26px 20px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 26px;
+  color: #e2e8f0;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(37, 148, 210, 0.16), transparent 55%),
+    radial-gradient(ellipse at 100% 100%, rgba(246, 153, 61, 0.1), transparent 45%),
+    linear-gradient(178deg, #0a1526 0%, #0d1728 55%, #0a1120 100%);
+  border-right: 1px solid rgba(79, 195, 247, 0.12);
+  overflow: hidden;
 }
 
-.admin-brand h2 {
-  font-size: 1.4rem;
+/* faint hi-tech grid overlay */
+.admin-sidebar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(79, 195, 247, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79, 195, 247, 0.045) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: linear-gradient(180deg, #000 0%, transparent 70%);
+}
+
+.admin-brand {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+/* logo on a white chip — full brand color, compact footprint */
+.admin-logo {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 14px 34px -14px rgba(0, 0, 0, 0.7),
+    0 0 30px -8px rgba(39, 169, 224, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.25s ease;
+}
+
+.admin-logo:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.16),
+    0 18px 40px -14px rgba(0, 0, 0, 0.75),
+    0 0 40px -6px rgba(39, 169, 224, 0.6),
+    0 0 46px -10px rgba(246, 153, 61, 0.4);
+}
+
+.admin-logo img {
+  display: block;
+  width: 176px;
+  height: auto;
 }
 
 .admin-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   color: #7dd3fc;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
+.admin-eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c08d;
+  box-shadow: 0 0 0 4px rgba(34, 192, 141, 0.16);
+  animation: eyebrow-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes eyebrow-pulse {
+  50% { box-shadow: 0 0 0 7px rgba(34, 192, 141, 0); }
+}
+
 .admin-nav {
+  position: relative;
   display: grid;
   gap: 8px;
 }
@@ -34,14 +102,31 @@
 .admin-nav a {
   padding: 12px 14px;
   border-radius: 12px;
-  color: #cbd5e1;
+  border: 1px solid transparent;
+  color: #b7c6d6;
   font-weight: 600;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.25s ease;
 }
 
-.admin-nav a.active,
 .admin-nav a:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(79, 195, 247, 0.18);
   color: #fff;
+  transform: translateX(3px);
+}
+
+.admin-nav a.active {
+  background: linear-gradient(115deg, rgba(26, 123, 181, 0.9), rgba(39, 169, 224, 0.8));
+  border-color: rgba(79, 195, 247, 0.4);
+  color: #fff;
+  box-shadow:
+    0 12px 28px -12px rgba(39, 169, 224, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .admin-nav-muted {
@@ -50,13 +135,38 @@
 }
 
 .admin-user {
+  position: relative;
   margin-top: auto;
   display: grid;
   gap: 6px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+}
+
+.admin-user p {
+  font-weight: 700;
+  color: #f1f6fb;
 }
 
 .admin-user small {
-  color: #94a3b8;
+  color: #8fa5ba;
+  overflow-wrap: anywhere;
+}
+
+.admin-user .btn {
+  margin-top: 8px;
+  justify-content: center;
+  color: #cfe4f2;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.admin-user .btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
 }
 
 .admin-content {
@@ -74,7 +184,20 @@
     gap: 16px;
   }
 
+  .admin-brand {
+    justify-items: center;
+    justify-content: center;
+  }
+
+  .admin-logo img {
+    width: 150px;
+  }
+
   .admin-nav {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-nav a:hover {
+    transform: none;
   }
 }
