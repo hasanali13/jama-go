@@ -12,40 +12,43 @@ import {
 @Injectable({ providedIn: 'root' })
 export class StaffService {
   private readonly http = inject(HttpClient);
+  private readonly baseUrl = `${environment.apiUrl}/staff`;
 
+  /** Public: active staff for the marketing site. */
   getActive(): Observable<StaffMember[]> {
     return this.http
-      .get<ApiResult<StaffMember[]>>(`${environment.apiUrl}/staff`)
+      .get<ApiResult<StaffMember[]>>(this.baseUrl)
       .pipe(map((result) => unwrapApiResult(result)));
   }
 
+  /** Admin: all staff including inactive. Requires Bearer token. */
   getAll(): Observable<StaffMember[]> {
     return this.http
-      .get<ApiResult<StaffMember[]>>(`${environment.apiUrl}/staff/all`)
+      .get<ApiResult<StaffMember[]>>(`${this.baseUrl}/all`)
       .pipe(map((result) => unwrapApiResult(result)));
   }
 
   getById(id: string): Observable<StaffMember> {
     return this.http
-      .get<ApiResult<StaffMember>>(`${environment.apiUrl}/staff/${id}`)
+      .get<ApiResult<StaffMember>>(`${this.baseUrl}/${id}`)
       .pipe(map((result) => unwrapApiResult(result)));
   }
 
   create(request: CreateStaffRequest): Observable<string> {
     return this.http
-      .post<ApiResult<string>>(`${environment.apiUrl}/staff`, request)
+      .post<ApiResult<string>>(this.baseUrl, request)
       .pipe(map((result) => unwrapApiResult(result)));
   }
 
   update(id: string, request: UpdateStaffRequest): Observable<string> {
     return this.http
-      .put<ApiResult<string>>(`${environment.apiUrl}/staff/${id}`, { ...request, id })
+      .put<ApiResult<string>>(`${this.baseUrl}/${id}`, { ...request, id })
       .pipe(map((result) => unwrapApiResult(result)));
   }
 
   delete(id: string): Observable<string> {
     return this.http
-      .delete<ApiResult<string>>(`${environment.apiUrl}/staff/${id}`)
+      .delete<ApiResult<string>>(`${this.baseUrl}/${id}`)
       .pipe(map((result) => unwrapApiResult(result)));
   }
 }

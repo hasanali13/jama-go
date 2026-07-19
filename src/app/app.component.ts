@@ -15,12 +15,18 @@ import { FooterComponent } from './components/footer/footer.component';
 export class AppComponent {
   private readonly router = inject(Router);
 
-  readonly isAdminShell = toSignal(
+  /** Hide marketing header/footer on admin login and admin pages. */
+  readonly showPublicShell = toSignal(
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-      map((event) => event.urlAfterRedirects.startsWith('/admin')),
-      startWith(this.router.url.startsWith('/admin')),
+      map(() => !this.isAdminRoute(this.router.url)),
+      startWith(!this.isAdminRoute(this.router.url)),
     ),
-    { initialValue: this.router.url.startsWith('/admin') },
+    { initialValue: !this.isAdminRoute(this.router.url) },
   );
+
+  private isAdminRoute(url: string): boolean {
+    const path = url.split('?')[0] ?? url;
+    return path === '/admin' || path.startsWith('/admin/');
+  }
 }

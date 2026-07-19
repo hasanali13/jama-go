@@ -2,14 +2,18 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   OnDestroy,
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
+import { getApiErrorMessage } from '../../../utils/api-error.util';
 
 @Component({
   selector: 'app-admin-login',
@@ -23,6 +27,7 @@ export class AdminLoginComponent implements AfterViewInit, OnDestroy {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
   private introTimer?: ReturnType<typeof setTimeout>;
   private gsapCleanup?: () => void;
 
@@ -107,23 +112,34 @@ export class AdminLoginComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
+    const email = this.email.trim();
+    const password = this.password;
+
+    if (!email || !password) {
+      this.error.set('Email and password are required.');
+      return;
+    }
+
     this.loading.set(true);
     this.error.set(null);
 
-    this.auth.login({ email: this.email.trim(), password: this.password }).subscribe({
-      next: () => {
-        this.loading.set(false);
-        void this.router.navigate(['/admin/staff']);
-      },
-      error: () => {
-        this.loading.set(false);
-        this.error.set('Invalid email or password. Access denied.');
-        this.host.nativeElement.querySelector('.panel-inner')?.classList.add('is-shake');
-        setTimeout(() => {
-          this.host.nativeElement.querySelector('.panel-inner')?.classList.remove('is-shake');
-        }, 450);
-      },
-    });
+    this.auth
+      .login({ email, password })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe({
+        next: () => {
+          void this.router.navigate(['/admin/staff']);
+        },
+        error: (err: unknown) => {
+          this.error.set(getApiErrorMessage(err, 'Invalid email or password.'));
+          const panel = this.host.nativeElement.querySelector('.panel-inner');
+          panel?.classList.add('is-shake');
+          setTimeout(() => panel?.classList.remove('is-shake'), 450);
+        },
+      });
   }
 
   private async enhanceWithGsap(): Promise<void> {

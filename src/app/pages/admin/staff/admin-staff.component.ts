@@ -1,7 +1,10 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { finalize } from 'rxjs';
 import { StaffService } from '../../../services/staff.service';
 import { CreateStaffRequest, StaffMember, UpdateStaffRequest } from '../../../models/staff.model';
+import { getApiErrorMessage } from '../../../utils/api-error.util';
 
 type StaffFormModel = CreateStaffRequest & { isActive: boolean };
 
@@ -15,6 +18,7 @@ type StaffFormModel = CreateStaffRequest & { isActive: boolean };
 })
 export class AdminStaffComponent {
   private readonly staffService = inject(StaffService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly staff = signal<StaffMember[]>([]);
   readonly loading = signal(true);
@@ -33,16 +37,18 @@ export class AdminStaffComponent {
     this.loading.set(true);
     this.error.set(null);
 
-    this.staffService.getAll().subscribe({
-      next: (items) => {
-        this.staff.set(items);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set('Could not load staff.');
-        this.loading.set(false);
-      },
-    });
+    this.staffService
+      .getAll()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe({
+        next: (items) => this.staff.set(items),
+        error: (err: unknown) => {
+          this.error.set(getApiErrorMessage(err, 'Could not load staff.'));
+        },
+      });
   }
 
   startCreate(): void {
@@ -93,17 +99,20 @@ export class AdminStaffComponent {
       ? this.staffService.update(editingId, request as UpdateStaffRequest)
       : this.staffService.create(request);
 
-    action.subscribe({
-      next: () => {
-        this.saving.set(false);
-        this.cancelForm();
-        this.loadStaff();
-      },
-      error: () => {
-        this.saving.set(false);
-        this.error.set('Could not save staff member.');
-      },
-    });
+    action
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.saving.set(false)),
+      )
+      .subscribe({
+        next: () => {
+          this.cancelForm();
+          this.loadStaff();
+        },
+        error: (err: unknown) => {
+          this.error.set(getApiErrorMessage(err, 'Could not save staff member.'));
+        },
+      });
   }
 
   remove(member: StaffMember): void {
@@ -111,10 +120,15 @@ export class AdminStaffComponent {
       return;
     }
 
-    this.staffService.delete(member.id).subscribe({
-      next: () => this.loadStaff(),
-      error: () => this.error.set('Could not delete staff member.'),
-    });
+    this.staffService
+      .delete(member.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => this.loadStaff(),
+        error: (err: unknown) => {
+          this.error.set(getApiErrorMessage(err, 'Could not delete staff member.'));
+        },
+      });
   }
 
   private emptyForm(): StaffFormModel {

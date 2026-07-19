@@ -1,11 +1,11 @@
-@if (!isAdminShell()) {
+@if (showPublicShell()) {
   <app-header />
 }
 
-<div class="app-shell" [class.app-shell--admin]="isAdminShell()">
+<div class="app-shell" [class.app-shell--admin]="!showPublicShell()">
   <router-outlet />
 </div>
 
-@if (!isAdminShell()) {
+@if (showPublicShell()) {
   <app-footer />
 }
