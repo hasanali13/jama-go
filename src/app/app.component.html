@@ -1,5 +1,11 @@
-<app-header />
-<main>
+@if (!isAdminShell()) {
+  <app-header />
+}
+
+<div class="app-shell" [class.app-shell--admin]="isAdminShell()">
   <router-outlet />
-</main>
-<app-footer />
+</div>
+
+@if (!isAdminShell()) {
+  <app-footer />
+}

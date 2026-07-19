@@ -11,19 +11,28 @@ export const routes: Routes = [
   { path: '', component: HomeComponent, title: 'Jama Go Security — Protecting What Matters Most' },
   { path: 'contact', component: ContactComponent, title: 'Contact Us — Jama Go Security' },
   {
-    path: 'admin/login',
-    component: AdminLoginComponent,
-    canActivate: [guestGuard],
-    title: 'Admin Login — Jama Go Security',
-  },
-  {
     path: 'admin',
-    component: AdminLayoutComponent,
-    canActivate: [adminGuard],
     children: [
-      { path: '', redirectTo: 'staff', pathMatch: 'full' },
-      { path: 'staff', component: AdminStaffComponent, title: 'Manage Staff — Jama Go Admin' },
-      { path: 'contacts', component: AdminContactsComponent, title: 'Contact Submissions — Jama Go Admin' },
+      {
+        path: 'login',
+        component: AdminLoginComponent,
+        canActivate: [guestGuard],
+        title: 'Admin Login — Jama Go Security',
+      },
+      {
+        path: '',
+        component: AdminLayoutComponent,
+        canActivate: [adminGuard],
+        children: [
+          { path: '', pathMatch: 'full', redirectTo: 'staff' },
+          { path: 'staff', component: AdminStaffComponent, title: 'Manage Staff — Jama Go Admin' },
+          {
+            path: 'contacts',
+            component: AdminContactsComponent,
+            title: 'Contact Submissions — Jama Go Admin',
+          },
+        ],
+      },
     ],
   },
   { path: '**', redirectTo: '' },

@@ -43,10 +43,14 @@ export class AuthService {
       );
   }
 
-  logout(): void {
+  clearSession(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     this.currentUser.set(null);
+  }
+
+  logout(): void {
+    this.clearSession();
     void this.router.navigate(['/admin/login']);
   }
 

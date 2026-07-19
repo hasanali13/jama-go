@@ -10,6 +10,7 @@ export const adminGuard: CanActivateFn = () => {
     return true;
   }
 
+  auth.clearSession();
   return router.createUrlTree(['/admin/login']);
 };
 

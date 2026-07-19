@@ -59,8 +59,10 @@
   color: #94a3b8;
 }
 
-.admin-main {
+.admin-content {
   padding: 32px;
+  min-width: 0;
+  background: var(--bg);
 }
 
 @media (max-width: 900px) {

@@ -1,33 +1,205 @@
 <section class="admin-login">
-  <div class="admin-login-card">
-    <p class="admin-eyebrow">Jama Go Security</p>
-    <h1>Admin Sign In</h1>
-    <p class="admin-subtitle">Manage staff profiles and contact submissions.</p>
-
-    <form (submit)="submit($event)">
-      <label>
-        Email
-        <input type="email" name="email" [(ngModel)]="email" required autocomplete="username" />
-      </label>
-
-      <label>
-        Password
-        <input
-          type="password"
-          name="password"
-          [(ngModel)]="password"
-          required
-          autocomplete="current-password"
+  @if (showCinema()) {
+    <div class="cinema" aria-hidden="true">
+      <div class="letterbox letterbox-top"></div>
+      <div class="letterbox letterbox-bottom"></div>
+      <div class="cinema-flash"></div>
+      <div class="cinema-beam"></div>
+      <div class="cinema-center">
+        <img
+          class="cinema-logo"
+          src="/JamaGoLogo.png"
+          alt=""
+          width="440"
+          height="168"
+          decoding="async"
         />
-      </label>
+        <p class="cinema-sub">SECURITY PROTOCOL</p>
+      </div>
+      <button type="button" class="cinema-skip" (click)="skipIntro()">Skip</button>
+    </div>
+  }
 
-      @if (error()) {
-        <p class="admin-error">{{ error() }}</p>
-      }
+  <div class="login-stage">
+    <div class="atmosphere" aria-hidden="true">
+      <div class="orb orb-cyan"></div>
+      <div class="orb orb-amber"></div>
+      <div class="mesh"></div>
+    </div>
 
-      <button type="submit" class="btn btn-primary btn-block" [disabled]="loading()">
-        {{ loading() ? 'Signing in…' : 'Sign In' }}
-      </button>
-    </form>
+    <div class="login-shell">
+      <aside class="login-visual">
+        <a class="back-link" href="/">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          Jama Go
+        </a>
+
+        <div class="visual-core">
+          <div class="radar" aria-hidden="true">
+            <div class="ring ring-a"></div>
+            <div class="ring ring-b"></div>
+            <div class="radar-sweep"></div>
+            <div class="orbit orbit-a"><i></i></div>
+            <div class="orbit orbit-b"><i></i></div>
+            <div class="scanline"></div>
+            <div class="shield">
+              <svg viewBox="0 0 64 64">
+                <path d="M32 5 53 13v16c0 14-8.8 24.8-21 30C19.8 53.8 11 43 11 29V13L32 5Z" />
+                <path d="m23.5 32 5.7 5.7L41.5 24" />
+              </svg>
+            </div>
+            @for (p of particles; track p) {
+              <span
+                class="particle"
+                [style.left.%]="(p * 37) % 100"
+                [style.top.%]="(p * 53) % 100"
+              ></span>
+            }
+          </div>
+
+          <p class="kicker">Secure operations</p>
+          <h2 class="headline">
+            <span class="line">
+              @for (ch of line1; track $index) {
+                <span class="char">{{ ch }}</span>
+              }
+            </span>
+            <span class="line accent">
+              @for (ch of line2; track $index) {
+                <span class="char">{{ ch }}</span>
+              }
+            </span>
+            <span class="line">
+              @for (ch of line3; track $index) {
+                <span class="char">{{ ch }}</span>
+              }
+            </span>
+          </h2>
+          <p class="rotator" aria-hidden="true">
+            <span class="rotator-label">Protecting</span>
+            <span class="rotator-words">
+              @for (word of rotatorWords; track $index) {
+                <span class="rotator-word" [class.active]="$index === 0">{{ word }}</span>
+              }
+            </span>
+          </p>
+
+          <p class="visual-copy">
+            Elite access for Jama Go operators — staff, enquiries, and field intelligence in one
+            protected control room.
+          </p>
+          <div class="stats">
+            <div class="stat-item"><strong>24/7</strong><span>Live watch</span></div>
+            <div class="stat-item"><strong>AES</strong><span>Session lock</span></div>
+            <div class="stat-item"><strong>QA</strong><span>Doha based</span></div>
+          </div>
+        </div>
+
+        <p class="visual-meta">Jama Go Security Equipment · Doha, Qatar</p>
+      </aside>
+
+      <div class="login-panel">
+        <div class="panel-inner">
+          <div class="brand login-reveal">
+            <img
+              class="brand-logo"
+              src="/JamaGoLogo.png"
+              alt="Jama Go Security Equipment"
+              width="150"
+              height="150"
+              decoding="async"
+            />
+          </div>
+
+          <header class="heading login-reveal">
+            <p class="eyebrow">Admin vault</p>
+            <h1>Welcome back</h1>
+            <p>Authenticate to enter the Jama Go command portal.</p>
+          </header>
+
+          <form class="login-form" (submit)="submit($event)" novalidate>
+            <div class="field login-reveal">
+              <label for="admin-email">Username / email</label>
+              <div class="control">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4.5 21a7.5 7.5 0 0 1 15 0" />
+                </svg>
+                <input
+                  id="admin-email"
+                  type="email"
+                  name="email"
+                  [(ngModel)]="email"
+                  required
+                  autocomplete="username"
+                  placeholder="Enter username"
+                />
+              </div>
+            </div>
+
+            <div class="field login-reveal">
+              <label for="admin-password">Password</label>
+              <div class="control">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="5" y="10" width="14" height="11" rx="2" />
+                  <path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3" />
+                </svg>
+                <input
+                  id="admin-password"
+                  [type]="showPassword() ? 'text' : 'password'"
+                  name="password"
+                  [(ngModel)]="password"
+                  required
+                  autocomplete="current-password"
+                  placeholder="Enter password"
+                />
+                <button class="password-toggle" type="button" (click)="togglePassword()">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2.5 12S6 6.5 12 6.5 21.5 12 21.5 12 18 17.5 12 17.5 2.5 12 2.5 12Z" />
+                    <circle cx="12" cy="12" r="2.5" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="row login-reveal">
+              <label class="remember">
+                <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe" />
+                <span class="box">
+                  <svg viewBox="0 0 12 10" aria-hidden="true"><path d="m1 5 3 3 7-7" /></svg>
+                </span>
+                Remember me
+              </label>
+              <button type="button" class="forgot" (click)="forgotPassword()">Forgot Password?</button>
+            </div>
+
+            @if (error()) {
+              <p class="error" role="alert">{{ error() }}</p>
+            }
+
+            <button
+              type="submit"
+              class="signin login-reveal"
+              [disabled]="loading()"
+              (pointerdown)="spawnRipple($event)"
+            >
+              <span class="btn-label">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="5" y="10" width="14" height="11" rx="2" />
+                  <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+                </svg>
+                {{ loading() ? 'Unlocking…' : 'Sign In' }}
+              </span>
+              <span class="btn-shine" aria-hidden="true"></span>
+            </button>
+          </form>
+
+          <div class="trust login-reveal">
+            <span class="live"><i></i> Encrypted channel</span>
+            <span>JWT · Role protected</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
