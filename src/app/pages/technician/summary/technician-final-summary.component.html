@@ -1,0 +1,37 @@
+<section class="dia-page">
+  @if (loading()) {
+    <p>Loading final summary…</p>
+  } @else if (error()) {
+    <div class="admin-panel"><p>{{ error() }}</p></div>
+  } @else if (summary(); as item) {
+    <header class="admin-page-header">
+      <div>
+        <span class="admin-kicker">Final summary</span>
+        <h1>{{ item.diaNumber }}</h1>
+        <p>{{ item.clientName }} · Started {{ (item.inspectionStartedDate | date: 'longDate') || '—' }}</p>
+      </div>
+      <a mat-stroked-button routerLink="/technician">Back to dashboard</a>
+    </header>
+
+    <section class="admin-panel tech-section">
+      <h2>Quarterly inspections ({{ item.inspections.length }})</h2>
+      @for (inspection of item.inspections; track inspection.id) {
+        <p>Quarter {{ inspection.quarter }} — {{ inspection.status }} · {{ inspection.cameras.length }} cameras</p>
+      }
+    </section>
+
+    <section class="admin-panel tech-section">
+      <h2>Invoices ({{ item.invoices.length }})</h2>
+      @for (invoice of item.invoices; track invoice.id) {
+        <p>{{ invoice.invoiceNumber }} · Quarter {{ invoice.quarter }} · {{ invoice.generatedAt | date: 'medium' }}</p>
+      }
+    </section>
+
+    <section class="admin-panel tech-section">
+      <h2>History ({{ item.history.length }})</h2>
+      @for (entry of item.history; track entry.id) {
+        <p>{{ entry.action }} · {{ entry.actorName || entry.actorId }} · {{ entry.createdDate | date: 'medium' }}</p>
+      }
+    </section>
+  }
+</section>

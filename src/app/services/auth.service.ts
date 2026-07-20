@@ -42,7 +42,12 @@ export class AuthService {
     return this.currentUser()?.role === 'Staff';
   }
 
+  isTechnician(): boolean {
+    return this.currentUser()?.role === 'Technician';
+  }
+
   landingRoute(user = this.currentUser()): string {
+    if (user?.role === 'Technician') return '/technician';
     return user?.role === 'Staff' ? '/staff/profile' : '/admin/staff';
   }
 
@@ -75,7 +80,9 @@ export class AuthService {
   /** Clears an invalid/expired session and returns to the shared secure login. */
   handleUnauthorized(): void {
     const onPortal =
-      this.router.url.startsWith('/admin') || this.router.url.startsWith('/staff');
+      this.router.url.startsWith('/admin')
+      || this.router.url.startsWith('/staff')
+      || this.router.url.startsWith('/technician');
     this.clearSession();
 
     if (onPortal && !this.router.url.startsWith('/admin/login')) {

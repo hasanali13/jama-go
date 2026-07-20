@@ -7,7 +7,7 @@ import { AdminStaffComponent } from './pages/admin/staff/admin-staff.component';
 import { StaffEditorComponent } from './pages/admin/staff-editor/staff-editor.component';
 import { AdminContactsComponent } from './pages/admin/contacts/admin-contacts.component';
 import { StaffProfileComponent } from './pages/staff/profile/staff-profile.component';
-import { adminGuard, guestGuard, staffGuard } from './guards/admin.guard';
+import { adminGuard, guestGuard, staffGuard, technicianGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, title: 'Jama Go Security — Protecting What Matters Most' },
@@ -51,6 +51,12 @@ export const routes: Routes = [
         ],
       },
     ],
+  },
+  {
+    path: 'technician',
+    canActivate: [technicianGuard],
+    loadChildren: () =>
+      import('./pages/technician/technician.routes').then((module) => module.TECHNICIAN_ROUTES),
   },
   {
     path: 'staff/profile',

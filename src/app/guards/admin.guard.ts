@@ -37,6 +37,23 @@ export const staffGuard: CanActivateFn = () => {
   );
 };
 
+export const technicianGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+
+  if (!auth.isLoggedIn()) {
+    auth.clearSession();
+    return router.createUrlTree(['/admin/login']);
+  }
+
+  return auth.validateSession().pipe(
+    map((user) =>
+      user.role === 'Technician' ? true : router.createUrlTree([auth.landingRoute(user)]),
+    ),
+    catchError(() => of(router.createUrlTree(['/admin/login']))),
+  );
+};
+
 export const guestGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
