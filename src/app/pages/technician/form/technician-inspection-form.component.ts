@@ -75,7 +75,10 @@ export class TechnicianInspectionFormComponent implements OnInit {
       remarks: [''],
     }),
     kpoi: this.fb.group({
-      details: [''],
+      ivdIvss: [''],
+      kpoiCamera: [''],
+      lens: [''],
+      hardDisc: [''],
     }),
   });
 
@@ -151,7 +154,12 @@ export class TechnicianInspectionFormComponent implements OnInit {
           ...raw.anpr,
           anprInstalled: raw.anpr.anprInstalled ?? false,
         },
-        kpoi: raw.kpoi.details?.trim() ? { details: raw.kpoi.details.trim() } : null,
+        kpoi: {
+          ivdIvss: raw.kpoi.ivdIvss?.trim() || null,
+          kpoiCamera: raw.kpoi.kpoiCamera?.trim() || null,
+          lens: raw.kpoi.lens?.trim() || null,
+          hardDisc: raw.kpoi.hardDisc?.trim() || null,
+        },
       })
       .pipe(finalize(() => this.saving.set(false)))
       .subscribe({
@@ -196,7 +204,12 @@ export class TechnicianInspectionFormComponent implements OnInit {
       vms: inspection.vms ?? {},
       upsGeneral: inspection.upsGeneral ?? { generatorAvailable: false },
       anpr: inspection.anpr ?? { anprInstalled: false },
-      kpoi: inspection.kpoi ?? { details: '' },
+      kpoi: {
+        ivdIvss: inspection.kpoi?.ivdIvss ?? '',
+        kpoiCamera: inspection.kpoi?.kpoiCamera ?? '',
+        lens: inspection.kpoi?.lens ?? '',
+        hardDisc: inspection.kpoi?.hardDisc ?? '',
+      },
     });
   }
 }

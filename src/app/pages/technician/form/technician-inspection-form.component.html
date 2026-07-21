@@ -83,10 +83,12 @@
 
       <section class="tech-section" formGroupName="kpoi">
         <h2>K'Poi</h2>
-        <mat-form-field appearance="outline" class="tech-full-width">
-          <mat-label>K'Poi details</mat-label>
-          <textarea matInput rows="4" formControlName="details"></textarea>
-        </mat-form-field>
+        <div class="tech-grid">
+          <mat-form-field appearance="outline"><mat-label>IVD / IVSS</mat-label><input matInput formControlName="ivdIvss" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>KPOI camera</mat-label><input matInput formControlName="kpoiCamera" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Lens</mat-label><input matInput formControlName="lens" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Hard disc</mat-label><input matInput formControlName="hardDisc" /></mat-form-field>
+        </div>
       </section>
 
       <div class="tech-form-actions">

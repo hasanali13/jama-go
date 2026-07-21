@@ -89,7 +89,10 @@ export interface AnprConfiguration {
 }
 
 export interface KpoiDetail {
-  details?: string | null;
+  ivdIvss?: string | null;
+  kpoiCamera?: string | null;
+  lens?: string | null;
+  hardDisc?: string | null;
 }
 
 export interface TechnicianInspection {

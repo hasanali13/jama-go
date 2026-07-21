@@ -73,7 +73,12 @@ import { TechnicianInspection } from '../../../models/technician.model';
 
       <section class="tech-section">
         <h2>K'Poi</h2>
-        <p class="tech-notes">{{ item.kpoi?.details || 'No K\'Poi details recorded.' }}</p>
+        <dl class="tech-detail-list">
+          <div><dt>IVD / IVSS</dt><dd>{{ item.kpoi?.ivdIvss || '—' }}</dd></div>
+          <div><dt>KPOI camera</dt><dd>{{ item.kpoi?.kpoiCamera || '—' }}</dd></div>
+          <div><dt>Lens</dt><dd>{{ item.kpoi?.lens || '—' }}</dd></div>
+          <div><dt>Hard disc</dt><dd>{{ item.kpoi?.hardDisc || '—' }}</dd></div>
+        </dl>
       </section>
     }
   `,

@@ -65,7 +65,14 @@ export function anprText(source: AnprConfiguration | null | undefined): string {
 }
 
 export function kpoiText(source: KpoiDetail | null | undefined): string {
-  return source?.details?.trim() ?? '';
+  if (!source) return '';
+  const parts = [
+    source.ivdIvss?.trim() ? `IVD/IVSS: ${source.ivdIvss.trim()}` : '',
+    source.kpoiCamera?.trim() ? `Camera: ${source.kpoiCamera.trim()}` : '',
+    source.lens?.trim() ? `Lens: ${source.lens.trim()}` : '',
+    source.hardDisc?.trim() ? `Hard disc: ${source.hardDisc.trim()}` : '',
+  ].filter(Boolean);
+  return parts.join('\n');
 }
 
 export function inspectionHasKeyInfo(inspection: TechnicianInspection): boolean {
